@@ -1,12 +1,20 @@
+import java.io.*;
+import java.net.Socket;
+
 class Client {
+    Socket socket;
     private int port;
     private String UserName;
     private String type;
-
-    public Client(String type, int port, String name) {
+    InputStream fromClientStream;
+    OutputStream toClientStream;
+    DataInputStream reader;
+    PrintWriter writer;
+    public Client(String type, int port, String name) throws IOException {
         setType(type);
         setPort(port);
         setUserName(name);
+        socket = new Socket("127.0.0.1",port);
     }
 
     public int getPort() {
