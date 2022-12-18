@@ -32,6 +32,7 @@ public class UserJsonParser {
             }
         }
 
+
         int countClient = 0;
         try {
             while (countClient < 3) {
