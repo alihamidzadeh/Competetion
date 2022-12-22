@@ -34,7 +34,6 @@ public class UserJsonParser {
 
 
         int countClient = 0;
-
         try {
             while (countClient < 3) {
                 Socket client = server.socket.accept();
