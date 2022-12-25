@@ -5,16 +5,21 @@ class Client {
     Socket socket;
     private int port;
     private String UserName;
-    private String type;
     InputStream fromClientStream;
     OutputStream toClientStream;
     DataInputStream reader;
     PrintWriter writer;
-    public Client(String type, int port, String name) throws IOException {
-        setType(type);
+
+    public Client(int port, String name) {
         setPort(port);
         setUserName(name);
-        socket = new Socket("127.0.0.1",port);
+
+        try {
+            socket = new Socket("127.0.0.1",2517);
+            System.out.println("Connected to the server!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getPort() {
@@ -33,11 +38,7 @@ class Client {
         UserName = userName;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public static void main(String[] args) {
+        new Client(5230, "client1");
     }
 }

@@ -24,11 +24,12 @@ public class UserJsonParser {
             JSONObject job = (JSONObject) array.get(i);
             String type = job.get("type").toString();
             if (type.equals("host")) {
-                server = new Server(job.get("type").toString(), Integer.parseInt(job.get("port").toString()), job.get("name").toString());
-                System.out.println("Server Created!");
+                server = new Server(Integer.parseInt(job.get("port").toString()), job.get("name").toString());
+                //System.out.println("Server Created!");
             } else {
-                Client client = new Client(job.get("type").toString(), Integer.parseInt(job.get("port").toString()), job.get("name").toString());
-                clients.add(client);
+                Client client = new Client(Integer.parseInt(job.get("port").toString()), job.get("name").toString());
+               //TODO
+                //clients.add(client);
             }
         }
 

@@ -1,7 +1,4 @@
-import java.io.DataInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class ClientManager implements Runnable {
@@ -11,15 +8,21 @@ public class ClientManager implements Runnable {
     public ClientManager(Server server, Socket client){
         this.server = server;
         this.client = client;
+
+        try {
+            server.fromClientStream = client.getInputStream();
+            server.toClientStream = client.getOutputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        server.reader = new DataInputStream(server.fromClientStream);
+        server.writer = new PrintWriter(server.toClientStream, true);
     }
 
     @Override
     public void run() {
         try{
-            server.fromClientStream = client.getInputStream();
-            server.toClientStream = client.getOutputStream();
-            server.reader = new DataInputStream(server.fromClientStream);
-            server.writer = new PrintWriter(server.toClientStream, true);
+
         }
         catch (Exception e){
             e.printStackTrace();
