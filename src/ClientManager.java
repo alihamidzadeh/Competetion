@@ -30,15 +30,15 @@ public class ClientManager implements Runnable {
     @Override
     public void run() {
         try{
-            System.out.println("hello");
-            writer.println("Hello Client joon");
+//            System.out.println("hello");
+//            writer.println("Hello Client joon");
             for (int i = 0; i < Question.questions.size(); i++) {
                 writer.println(Question.questions.get(i).getQuest().getBytes("UTF-8"));
                 writer.println(Question.questions.get(i).getChoices());
                 //timer start
                 writer.println("type the number of your choice: ");
                 int ans = Integer.parseInt(reader.readLine());
-                System.out.println("answer: " + ans);
+                System.out.println("answer client (" + client.getPort() + ") to question (" + (i+1)+") is: " + ans);
                 if(ans == Question.questions.get(i).getAns()){
                     //update score
                 }

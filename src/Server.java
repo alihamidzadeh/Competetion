@@ -33,7 +33,7 @@ public class Server {
             while (countClient < 3) {
                 Socket client = socket.accept();
                 countClient++;
-                System.out.printf("client %d has connected!\n", countClient);
+                System.out.printf("client %d has connected!, port is: %d\n", countClient,client.getPort());
                 Thread t = new Thread(new ClientManager(this, client));
                 threadList.add(t);
             }

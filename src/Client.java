@@ -1,4 +1,5 @@
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -11,19 +12,20 @@ class Client {
     DataInputStream reader;
     PrintWriter writer;
 
+    String hostAddress = "127.0.0.1";
     public Client(int port, String name) {
         setPort(port);
         setUserName(name);
 
         try {
-            socket = new Socket("127.0.0.1", 8082);
+
+            socket = new Socket(hostAddress, 8082, InetAddress.getByName(hostAddress), 5001 /*Client Port */);
             System.out.println("Connected to the server!");
             fromServerStream = socket.getOutputStream();
             toServerStream = socket.getInputStream();
             reader = new DataInputStream(toServerStream);
             writer = new PrintWriter(fromServerStream, true);
             Scanner input = new Scanner(System.in);
-            System.out.println(reader.readLine());
 
             for (int i = 0; i < Question.questions.size(); i++) {
                 System.out.println(reader.readLine());
