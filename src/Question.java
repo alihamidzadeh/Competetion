@@ -1,6 +1,9 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
+
 public class Question {
+    static ArrayList<Question> questions = QuestionsJsonParser.getQuestions();
     private String quest;
     private HashMap<Integer, String> choices;
     private int ans;

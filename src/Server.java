@@ -37,9 +37,11 @@ public class Server {
                 Thread t = new Thread(new ClientManager(this, client));
                 threadList.add(t);
             }
+
             for (int i = 0; i < this.threadList.size(); i++) {
                 this.threadList.get(i).start();
             }
+            while(true);
         } catch (Exception e) {
             e.printStackTrace();
         }

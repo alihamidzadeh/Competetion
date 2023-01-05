@@ -8,8 +8,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class QuestionsJsonParser {
-    public static void main(String[] args) throws IOException, ParseException {
-        Object obj = new JSONParser().parse(new FileReader("src/questions.json"));
+    public static ArrayList<Question> getQuestions(){
+        Object obj = null;
+        try {
+            obj = new JSONParser().parse(new FileReader("src/questions.json"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
         JSONArray array = (JSONArray) obj;
         ArrayList<Question> questions = new ArrayList<>();
 
@@ -17,10 +24,8 @@ public class QuestionsJsonParser {
             JSONObject job = (JSONObject) array.get(i);
             JSONArray options = (JSONArray) job.get("options");
             Question q = new Question(job.get("question").toString(), options.get(0).toString(), options.get(1).toString(), options.get(2).toString(), options.get(3).toString(), Integer.parseInt(job.get("answer").toString()));
-            //TODO
-            //questions.add(q);
-            //questions.add(q);
+            questions.add(q);
         }
-//        System.out.println(questions.get(0));
+    return questions;
     }
 }
