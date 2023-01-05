@@ -22,7 +22,8 @@ public class ClientManager implements Runnable {
     @Override
     public void run() {
         try{
-
+            System.out.println("hello");
+            while (true);
         }
         catch (Exception e){
             e.printStackTrace();

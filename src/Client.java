@@ -15,7 +15,7 @@ class Client {
         setUserName(name);
 
         try {
-            socket = new Socket("127.0.0.1",2517);
+            socket = new Socket("127.0.0.1",8082);
             System.out.println("Connected to the server!");
         } catch (IOException e) {
             e.printStackTrace();

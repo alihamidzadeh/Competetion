@@ -19,27 +19,32 @@ public class Server {
 
     public static void main(String[] args) {
         try {
-            new Server(2518, "host");
+            new Server(8081, "host");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void serverStart(){
+
+    public void serverStart() {
         try {
-            socket = new ServerSocket(2517);
+            socket = new ServerSocket(8082);
             System.out.println("Server Created!");
             int countClient = 0;
             while (countClient < 3) {
                 Socket client = socket.accept();
                 countClient++;
-                System.out.printf("client %d has connected!", countClient);
+                System.out.printf("client %d has connected!\n", countClient);
                 Thread t = new Thread(new ClientManager(this, client));
                 threadList.add(t);
+            }
+            for (int i = 0; i < this.threadList.size(); i++) {
+                this.threadList.get(i).start();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public Server(int port, String name) throws IOException {
         setUserName(name);
         setPort(port);
