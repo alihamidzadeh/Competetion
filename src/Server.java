@@ -8,10 +8,7 @@ public class Server {
     private int port;
     private String UserName;
 
-    InputStream fromClientStream;
-    OutputStream toClientStream;
-    DataInputStream reader;
-    PrintWriter writer;
+
 
     ArrayList<Thread> threadList = new ArrayList<Thread>();
     //ArrayList<Client> threadList = new ArrayList<Thread>();
@@ -30,7 +27,7 @@ public class Server {
             socket = new ServerSocket(8082);
             System.out.println("Server Created!");
             int countClient = 0;
-            while (countClient < 3) {
+            while (countClient < 1) {
                 Socket client = socket.accept();
                 countClient++;
                 System.out.printf("client %d has connected!, port is: %d\n", countClient,client.getPort());

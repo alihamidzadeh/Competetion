@@ -7,9 +7,9 @@ class Client {
     Socket socket;
     private int port;
     private String UserName;
-    InputStream toServerStream;
-    OutputStream fromServerStream;
-    DataInputStream reader;
+    InputStreamReader toServerStream;
+    OutputStreamWriter fromServerStream;
+    BufferedReader reader;
     PrintWriter writer;
 
     String hostAddress = "127.0.0.1";
@@ -19,11 +19,11 @@ class Client {
 
         try {
 
-            socket = new Socket(hostAddress, 8082, InetAddress.getByName(hostAddress), 5001 /*Client Port */);
+            socket = new Socket(hostAddress, 8082, InetAddress.getByName(hostAddress), 5003 /*Client Port */);
             System.out.println("Connected to the server!");
-            fromServerStream = socket.getOutputStream();
-            toServerStream = socket.getInputStream();
-            reader = new DataInputStream(toServerStream);
+            fromServerStream = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
+            toServerStream = new InputStreamReader(socket.getInputStream(), "UTF-8");
+            reader = new BufferedReader(toServerStream);
             writer = new PrintWriter(fromServerStream, true);
             Scanner input = new Scanner(System.in);
 
