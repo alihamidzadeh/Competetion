@@ -34,49 +34,23 @@ public class ClientManager implements Runnable {
     @Override
     public void run() {
         try{
-//            System.out.println("hello");
-//            writer.println("Hello Client joon");
+
             for (int i = 0; i < Question.questions.size(); i++) {
                 writer.println(Question.questions.get(i).getQuest());
                 writer.println(Question.questions.get(i).getChoices());
                 //timer start
                 writer.println("type the number of your choice: ");
-
-                ExecutorService response = Executors.newSingleThreadExecutor();
-                answer = 0;
-                try{
-                    Runnable r = new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                answer = Integer.parseInt(reader.readLine());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    };
-                    Future<?> f = response.submit(r);
-                    f.get(10, TimeUnit.SECONDS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                catch (TimeoutException e) {
-                    System.out.println("TimeOut");
-
-                }catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-                finally {
-                    response.shutdown();
-                }
+                Thread.sleep(15000);
+                answer = Integer.parseInt(reader.readLine());
 
                 System.out.println("answer client (" + client.getPort() + ") to question (" + (i+1)+") is: " + answer);
                 if(answer == Question.questions.get(i).getAns()){
                     //update score
+                    Server.score.put(client.getPort(), Server.score.getOrDefault(client.getPort(), 0) + 1 );
                 }
-
-               // sleep(5);
+                else{
+                    Server.score.put(client.getPort(), Server.score.getOrDefault(client.getPort(), 0));
+                }
             }
             while (true);
         }

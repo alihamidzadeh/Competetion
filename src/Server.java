@@ -2,13 +2,14 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Server {
     ServerSocket socket;
     private int port;
     private String UserName;
 
-
+    public static volatile HashMap<Integer, Integer> score = new HashMap<>();
 
     ArrayList<Thread> threadList = new ArrayList<Thread>();
     //ArrayList<Client> threadList = new ArrayList<Thread>();
@@ -27,7 +28,7 @@ public class Server {
             socket = new ServerSocket(8082);
             System.out.println("Server Created!");
             int countClient = 0;
-            while (countClient < 1) {
+            while (countClient < 2) {
                 Socket client = socket.accept();
                 countClient++;
                 System.out.printf("client %d has connected!, port is: %d\n", countClient,client.getPort());
