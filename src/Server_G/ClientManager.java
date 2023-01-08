@@ -1,9 +1,12 @@
 package Server_G;
 
+import Server_G.Pages.Lobby;
 import Server_G.Server;
 import Datas.*;
+
 import java.io.*;
 import java.net.Socket;
+import java.util.HashMap;
 
 import static java.lang.Thread.sleep;
 
@@ -16,8 +19,6 @@ public class ClientManager implements Runnable {
     BufferedReader reader;
     PrintWriter writer;
     int answer = 0;
-
-
 
 
     public ClientManager(Server server, Socket client) {
@@ -37,28 +38,28 @@ public class ClientManager implements Runnable {
 
     @Override
     public void run() {
-        try{
-
+        try {
+            String logS = "";
             for (int i = 0; i < Question.questions.size(); i++) {
                 writer.println(Question.questions.get(i).getQuest());
                 writer.println(Question.questions.get(i).getChoices());
+//                System.out.println(Question.questions.get(i).getChoices());
                 //timer start
-                writer.println("type the number of your choice: ");
-                Thread.sleep(15000);
+//                writer.println("type the number of your choice: ");
                 answer = Integer.parseInt(reader.readLine());
+                logS = String.format("answer client (%d) to question (%d) is: %d\n", client.getPort(), i + 1, answer);
+                Lobby.clientsLogTxtAr.appendText(logS);
 
-                System.out.println("answer client (" + client.getPort() + ") to question (" + (i+1)+") is: " + answer);
-                if(answer == Question.questions.get(i).getAns()){
+                sleep(15000);
+                if (answer == Question.questions.get(i).getAns()) {
                     //update score
-                    Server.score.put(client.getPort(), Server.score.getOrDefault(client.getPort(), 0) + 1 );
-                }
-                else{
+                    Server.score.put(client.getPort(), Server.score.getOrDefault(client.getPort(), 0) + 1);
+                } else {
                     Server.score.put(client.getPort(), Server.score.getOrDefault(client.getPort(), 0));
                 }
             }
-            while (true);
-        }
-        catch (Exception e){
+            while (true) ;
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

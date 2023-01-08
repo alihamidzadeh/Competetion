@@ -1,15 +1,19 @@
 package Client_G;
 
+import Client_G.Pages.Lobby;
 import Datas.Question;
 import Server_G.Server;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.*;
 
+import static java.lang.System.exit;
+
 public class Client {
-    Socket socket;
+    public static Socket socket;
     private int port;
     private String UserName;
     InputStreamReader toServerStream;
@@ -17,56 +21,37 @@ public class Client {
     BufferedReader reader;
     PrintWriter writer;
     int answer;
-
     String hostAddress = "127.0.0.1";
+
     public Client(int port, String name) {
         setPort(port);
         setUserName(name);
 
         try {
-
+//                while (socket == null) {
             socket = new Socket(hostAddress, 8082/*, InetAddress.getByName(hostAddress), 5003 /*Client_G.Client Port */);
-            System.out.println("Connected to the server!");
+//            System.out.println("Connected to the server!");
+//            Lobby.label2.setText("Connected to the server!");
+//                    if (socket.isConnected()){
+//                        break;
+//                    }
+//                }
+            Lobby.label2.setText("Connected To Server!");
             fromServerStream = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
             toServerStream = new InputStreamReader(socket.getInputStream(), "UTF-8");
             reader = new BufferedReader(toServerStream);
             writer = new PrintWriter(fromServerStream, true);
+            String quiz;
 
             for (int i = 0; i < Question.questions.size(); i++) {
-                System.out.println(reader.readLine());
-                System.out.println(reader.readLine());
-                System.out.println(reader.readLine());
-
-                //            ExecutorService response = Executors.newSingleThreadExecutor();
-                /// Scanner input = new Scanner(System.in);
+                quiz = reader.readLine() + "\n" + reader.readLine();
+                System.out.println(quiz);
+                Lobby.LogTxtAr.setText(quiz);
                 answer = 0;
-//                Thread.sleep(15000);
-//                if(input.hasNextInt()){
-//                    answer = input.nextInt();
-//                }
-//                class getAnswer extends Thread {
-//                    private int answerNumber;
-//
-//                    @Override
-//                    public void run() {
-//                        Scanner input = new Scanner(System.in);
-//                         answerNumber = input.nextInt();
-//                    }
-//                    public void killThread(){
-//                        super.stop();
-//                    }
-//                    public int getAnswer(){
-//                        return this.answerNumber;
-//                    }
-//                }
-//
-//                getAnswer GAthread = new getAnswer();
-//                GAthread.start();
-//                GAthread.join(15000);
                 Scanner input = new Scanner(System.in);
 
                 ExecutorService response = Executors.newSingleThreadExecutor();
-                try{
+                try {
                     Runnable r = new Runnable() {
                         @Override
                         public void run() {
@@ -77,25 +62,22 @@ public class Client {
                     f.get(15, TimeUnit.SECONDS);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
-                catch (TimeoutException e) {
+                } catch (TimeoutException e) {
                     System.out.println("TimeOut");
                     //    input.close();
 
                     answer = 0;
 
-                }catch (ExecutionException e) {
+                } catch (ExecutionException e) {
                     e.printStackTrace();
-                }
-                finally {
-                    writer.println(answer+"");
+                } finally {
+                    writer.println(answer + "");
                     response.shutdown();
                 }
 //                answer = GAthread.getAnswer();
 //                GAthread.killThread();
                 System.out.println(Server.score);
             }
-            System.out.println("khar");
             while (true) ;
 
         } catch (IOException e) {
@@ -119,7 +101,4 @@ public class Client {
         UserName = userName;
     }
 
-    public static void main(String[] args) {
-        new Client(5230, "client1");
-    }
 }

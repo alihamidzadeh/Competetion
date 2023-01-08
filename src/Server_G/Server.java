@@ -1,6 +1,7 @@
 package Server_G;
 
 import Server_G.Pages.Lobby;
+import Client_G.Pages.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -8,13 +9,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Server {
-    ServerSocket socket;
+    public static ServerSocket socket;
     private int port;
     private String UserName;
 
     public static volatile HashMap<Integer, Integer> score = new HashMap<>();
-    String log = "";
-    ArrayList<Thread> threadList = new ArrayList<Thread>();
+    String logS = "";
+    public static ArrayList<Thread> threadList = new ArrayList<Thread>();
+    public static ArrayList<Socket> clientList = new ArrayList<>();
     //ArrayList<Client> threadList = new ArrayList<Thread>();
 
 
@@ -28,25 +30,39 @@ public class Server {
 
     public void serverStart() {
         try {
+            if (!socket.isClosed())
+                socket.close();
             socket = new ServerSocket(8082);
-            System.out.println("Server Created!");
+            String logS = "Server Created!\n", logC = "Waiting for others ...\n";
+            Lobby.clientsLogTxtAr.setText(logS);
+//            System.out.println(logS);
             int countClient = 0;
-            while (countClient < 2) {
+            while (countClient < 1) {
                 Socket client = socket.accept();
+                clientList.add(client);
                 countClient++;
-                log += String.format("client %d has connected!, port is: %d\n", countClient,client.getPort());
-                System.out.println(log);
-                Lobby.clientsLogTxtAr.setText(log);
+
+                logS = String.format("client %d has connected!, port is: %d\n", countClient, client.getPort());
+                Lobby.clientsLogTxtAr.appendText(logS);
+
+                logC = String.format("client %d has connected!\n", countClient);
+                Client_G.Pages.Lobby.LogTxtAr.appendText(logC);
+//                System.out.println(logS);
                 Thread t = new Thread(new ClientManager(this, client));
                 threadList.add(t);
             }
-
-            for (int i = 0; i < this.threadList.size(); i++) {
-                this.threadList.get(i).start();
+            logS = "------------------------------------------\nQuiz has started ...\n";
+            Lobby.clientsLogTxtAr.appendText(logS);
+            Client_G.Pages.Lobby.LogTxtAr.setText(logS); //The previous text was deleted
+            for (int i = 0; i < threadList.size(); i++) {
+                threadList.get(i).start();
             }
+            while (!socket.isClosed()) ;
+            System.out.println("Server has downed!");
 //            while(true);
         } catch (Exception e) {
             e.printStackTrace();
+
         }
     }
 

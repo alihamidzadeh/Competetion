@@ -2,6 +2,7 @@ package Server_G;
 
 import Server_G.Pages.Lobby;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -12,8 +13,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+
+import static java.lang.System.exit;
 
 public class Graphic extends Application {
 
@@ -25,7 +29,7 @@ public class Graphic extends Application {
         stage.setHeight(600);
         stage.setX(600);
         stage.setY(50);
-        Label titleLB = new Label("Server_G");
+        Label titleLB = new Label("Server");
         titleLB.setStyle("-fx-font-family: 'Impact';\n" +
                 "-fx-font-size: 40px;\n" +
                 "-fx-font-weight: bold;\n" +
@@ -95,6 +99,13 @@ public class Graphic extends Application {
         stage.alwaysOnTopProperty();
         stage.setAlwaysOnTop(true);
         stage.show();
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                System.out.println("Graphic window is closing");
+                stage.close();
+                exit(0);
+            }
+        });
 
 
         //set Action for botton
@@ -102,14 +113,17 @@ public class Graphic extends Application {
             Lobby lobby = new Lobby();
             try {
                 lobby.start(stage);
+                Lobby.clientsLogTxtAr.clear();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
 
+
         exitBtn.setOnAction(actionEvent -> {
+            System.out.println("Graphic window is closing");
             stage.close();
-            return;
+            exit(0);
         });
     }
 }
