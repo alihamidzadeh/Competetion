@@ -1,3 +1,5 @@
+package Datas;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -11,7 +13,7 @@ public class QuestionsJsonParser {
     public static ArrayList<Question> getQuestions(){
         Object obj = null;
         try {
-            obj = new JSONParser().parse(new FileReader("src/questions.json"));
+            obj = new JSONParser().parse(new FileReader("src/Datas/questions.json"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ParseException e) {
@@ -26,6 +28,6 @@ public class QuestionsJsonParser {
             Question q = new Question(job.get("question").toString(), options.get(0).toString(), options.get(1).toString(), options.get(2).toString(), options.get(3).toString(), Integer.parseInt(job.get("answer").toString()));
             questions.add(q);
         }
-    return questions;
+        return questions;
     }
 }

@@ -1,10 +1,14 @@
+package Client_G;
+
+import Datas.Question;
+import Server_G.Server;
+
 import java.io.*;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.*;
 
-class Client {
+public class Client {
     Socket socket;
     private int port;
     private String UserName;
@@ -21,7 +25,7 @@ class Client {
 
         try {
 
-            socket = new Socket(hostAddress, 8082/*, InetAddress.getByName(hostAddress), 5003 /*Client Port */);
+            socket = new Socket(hostAddress, 8082/*, InetAddress.getByName(hostAddress), 5003 /*Client_G.Client Port */);
             System.out.println("Connected to the server!");
             fromServerStream = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
             toServerStream = new InputStreamReader(socket.getInputStream(), "UTF-8");
@@ -33,8 +37,8 @@ class Client {
                 System.out.println(reader.readLine());
                 System.out.println(reader.readLine());
 
-    //            ExecutorService response = Executors.newSingleThreadExecutor();
-               /// Scanner input = new Scanner(System.in);
+                //            ExecutorService response = Executors.newSingleThreadExecutor();
+                /// Scanner input = new Scanner(System.in);
                 answer = 0;
 //                Thread.sleep(15000);
 //                if(input.hasNextInt()){
@@ -76,7 +80,7 @@ class Client {
                 }
                 catch (TimeoutException e) {
                     System.out.println("TimeOut");
-                //    input.close();
+                    //    input.close();
 
                     answer = 0;
 

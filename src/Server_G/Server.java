@@ -1,3 +1,6 @@
+package Server_G;
+
+import Server_G.Pages.Lobby;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,18 +13,18 @@ public class Server {
     private String UserName;
 
     public static volatile HashMap<Integer, Integer> score = new HashMap<>();
-
+    String log = "";
     ArrayList<Thread> threadList = new ArrayList<Thread>();
     //ArrayList<Client> threadList = new ArrayList<Thread>();
 
 
-    public static void main(String[] args) {
-        try {
-            new Server(8081, "host");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) {
+//        try {
+//            new Server(8081, "host");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public void serverStart() {
         try {
@@ -31,7 +34,9 @@ public class Server {
             while (countClient < 2) {
                 Socket client = socket.accept();
                 countClient++;
-                System.out.printf("client %d has connected!, port is: %d\n", countClient,client.getPort());
+                log += String.format("client %d has connected!, port is: %d\n", countClient,client.getPort());
+                System.out.println(log);
+                Lobby.clientsLogTxtAr.setText(log);
                 Thread t = new Thread(new ClientManager(this, client));
                 threadList.add(t);
             }
@@ -39,7 +44,7 @@ public class Server {
             for (int i = 0; i < this.threadList.size(); i++) {
                 this.threadList.get(i).start();
             }
-            while(true);
+//            while(true);
         } catch (Exception e) {
             e.printStackTrace();
         }

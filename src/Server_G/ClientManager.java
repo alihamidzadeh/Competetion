@@ -1,7 +1,9 @@
+package Server_G;
+
+import Server_G.Server;
+import Datas.*;
 import java.io.*;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.*;
 
 import static java.lang.Thread.sleep;
 
@@ -16,7 +18,9 @@ public class ClientManager implements Runnable {
     int answer = 0;
 
 
-    public ClientManager(Server server, Socket client){
+
+
+    public ClientManager(Server server, Socket client) {
         this.server = server;
         this.client = client;
 
@@ -28,8 +32,8 @@ public class ClientManager implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
+
 
     @Override
     public void run() {
