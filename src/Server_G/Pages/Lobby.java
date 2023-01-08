@@ -13,6 +13,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 
 public class Lobby {
     public static TextArea clientsLogTxtAr = new TextArea();
@@ -72,7 +74,18 @@ public class Lobby {
         stage.alwaysOnTopProperty();
         stage.setAlwaysOnTop(true);
         stage.show();
-        Server server = new Server(8081, "host");
+        class serverThread extends Thread {
+            @Override
+            public void run() {
+                try {
+                    Server server = new Server(8081, "host");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        serverThread t = new serverThread();
+        t.start();
 
     }
 }
