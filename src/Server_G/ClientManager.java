@@ -40,6 +40,7 @@ public class ClientManager implements Runnable {
     public void run() {
         try {
             String logS = "";
+            writer.println(Question.questions.size());
             for (int i = 0; i < Question.questions.size(); i++) {
                 writer.println(Question.questions.get(i).getQuest());
                 writer.println(Question.questions.get(i).getChoices());
@@ -50,7 +51,7 @@ public class ClientManager implements Runnable {
                 logS = String.format("answer client (%d) to question (%d) is: %d\n", client.getPort(), i + 1, answer);
                 Lobby.clientsLogTxtAr.appendText(logS);
 
-                sleep(15000);
+//                sleep(10000); //TODO 15000
                 if (answer == Question.questions.get(i).getAns()) {
                     //update score
                     Server.score.put(client.getPort(), Server.score.getOrDefault(client.getPort(), 0) + 1);
@@ -58,7 +59,7 @@ public class ClientManager implements Runnable {
                     Server.score.put(client.getPort(), Server.score.getOrDefault(client.getPort(), 0));
                 }
             }
-            while (true) ;
+//            while (true) ;
         } catch (Exception e) {
             e.printStackTrace();
         }

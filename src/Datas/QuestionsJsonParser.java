@@ -28,6 +28,6 @@ public class QuestionsJsonParser {
             Question q = new Question(job.get("question").toString(), options.get(0).toString(), options.get(1).toString(), options.get(2).toString(), options.get(3).toString(), Integer.parseInt(job.get("answer").toString()));
             questions.add(q);
         }
-        return questions;
+    return questions;
     }
 }

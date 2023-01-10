@@ -20,7 +20,7 @@ public class Client {
     OutputStreamWriter fromServerStream;
     BufferedReader reader;
     PrintWriter writer;
-    int answer;
+    public static int answer;
     String hostAddress = "127.0.0.1";
 
     public Client(int port, String name) {
@@ -42,43 +42,37 @@ public class Client {
             reader = new BufferedReader(toServerStream);
             writer = new PrintWriter(fromServerStream, true);
             String quiz;
-
-            for (int i = 0; i < Question.questions.size(); i++) {
-                quiz = reader.readLine() + "\n" + reader.readLine();
+            int numberOfQuestions = Integer.parseInt(reader.readLine());
+//            System.out.println("numberOfQuestions= " + numberOfQuestions);
+            for (int i = 0; i < numberOfQuestions; i++) {
+                Lobby.setClicked(false);
+                Lobby.showBtns(true);
+                answer = -1;
+                quiz = "شماره سوال: " + (i + 1) + " از " + numberOfQuestions + "\n";
+                quiz += reader.readLine() + "\n\n" + reader.readLine();
                 System.out.println(quiz);
                 Lobby.LogTxtAr.setText(quiz);
-                answer = 0;
-                Scanner input = new Scanner(System.in);
 
-                ExecutorService response = Executors.newSingleThreadExecutor();
                 try {
-                    Runnable r = new Runnable() {
-                        @Override
-                        public void run() {
-                            answer = input.nextInt();
-                        }
-                    };
-                    Future<?> f = response.submit(r);
-                    f.get(15, TimeUnit.SECONDS);
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                } catch (TimeoutException e) {
-                    System.out.println("TimeOut");
-                    //    input.close();
-
-                    answer = 0;
-
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.println(answer + "");
-                    response.shutdown();
                 }
-//                answer = GAthread.getAnswer();
-//                GAthread.killThread();
-                System.out.println(Server.score);
+                if (Lobby.isClicked()) {
+                    answer = Lobby.getChoice();
+                    System.out.println("answer is: " + answer);
+
+                }
+                if (answer == -1) {
+                    System.out.println("Time Out...");
+                    answer = 0;
+                }
+                writer.println(answer + "");
+
+////                answer = GAthread.getAnswer();
+////                GAthread.killThread();
+//                System.out.println(Server.score);
             }
-            while (true) ;
 
         } catch (IOException e) {
             e.printStackTrace();

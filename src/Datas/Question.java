@@ -3,11 +3,10 @@ package Datas;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class Question {
     public static ArrayList<Question> questions = QuestionsJsonParser.getQuestions();
     private String quest;
-    private static HashMap<Integer, String> choices;
+    private HashMap<Integer, String> choices;
     private int ans;
 
     public String getQuest() {
