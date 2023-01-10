@@ -36,7 +36,7 @@ public class Lobby {
     private static Button btn3;
     private static Button btn4;
     private static boolean clicked;
-
+    private static Text clientAns;
 
 
     public void start(Stage stage) throws Exception {
@@ -47,7 +47,7 @@ public class Lobby {
                 "-fx-font-weight: bold;\n" +
                 "-fx-text-fill: rgba(0,0,0,.9);\n" +
                 "-fx-background-color: white;\n" +
-                "-fx-border-color: black;\n" +
+                "-fx-border-color: #000000;\n" +
                 "-fx-border-width: 3;\n" +
                 "-fx-alignment: center;\n" +
                 "-fx-text-alignment: center;\n" +
@@ -64,24 +64,27 @@ public class Lobby {
         LogTxtAr.setMaxSize(700, 150);
         LogTxtAr.setMinSize(500, 100);
 
-         btn1 = new Button("1");
-         btn2 = new Button("2");
-         btn3 = new Button("3");
-         btn4 = new Button("4");
-        btn1.setStyle("-fx-font-size:15px;-fx-text-fill: #c746ff");
-        btn2.setStyle("-fx-font-size:15px;-fx-text-fill: #c746ff");
-        btn3.setStyle("-fx-font-size:15px;-fx-text-fill: #c746ff");
-        btn4.setStyle("-fx-font-size:15px;-fx-text-fill: #c746ff");
+        btn1 = new Button("1");
+        btn2 = new Button("2");
+        btn3 = new Button("3");
+        btn4 = new Button("4");
+        btn1.setStyle("-fx-font-size:15px;-fx-text-fill: #000000;-fx-background-color: #7ad331");
+        btn2.setStyle("-fx-font-size:15px;-fx-text-fill: #000000;-fx-background-color: #7ad331");
+        btn3.setStyle("-fx-font-size:15px;-fx-text-fill: #000000;-fx-background-color: #7ad331");
+        btn4.setStyle("-fx-font-size:15px;-fx-text-fill: #000000;-fx-background-color: #7ad331");
         showBtns(false);
 
-        HBox hBox1 = new HBox();
-        HBox hBox2 = new HBox();
+        HBox hBox1 = new HBox(10);
+        HBox hBox2 = new HBox(10);
         hBox1.setAlignment(Pos.CENTER);
         hBox2.setAlignment(Pos.CENTER);
 
-        hBox1.getChildren().addAll(btn1,btn2);
-        hBox2.getChildren().addAll(btn3,btn4);
+        hBox1.getChildren().addAll(btn1, btn2);
+        hBox2.getChildren().addAll(btn3, btn4);
 
+        clientAns = new Text();
+        clientAns.setVisible(false);
+        clientAns.setStyle("-fx-font-size:18px; -fx-font-weight: bold;");
 
         Button backBtn = new Button("back");
         Pane root = new Pane();
@@ -94,7 +97,7 @@ public class Lobby {
 //        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         vbox.setLayoutX(45);
         vbox.setLayoutY(60);
-        vbox.getChildren().addAll(label1, label2, LogTxtAr,hBox1,hBox2, backBtn);
+        vbox.getChildren().addAll(label1, label2, LogTxtAr, hBox1, hBox2, clientAns, backBtn);
         root.getChildren().add(vbox);
         Scene scene1 = new Scene(root, 700, 300);
         stage.setScene(scene1);
@@ -128,24 +131,36 @@ public class Lobby {
         t.start();
 
         btn1.setOnAction(actionEvent -> {
-            System.out.println("btn1 was clicked");
+//            System.out.println("btn1 was clicked");
+            clientAns.setText("Your answer is number: 1");
+            clientAns.setVisible(true);
+
             setChoice(1);
         });
 
         btn2.setOnAction(actionEvent -> {
-            System.out.println("btn2 was clicked");
+//            System.out.println("btn2 was clicked");
+            clientAns.setText("Your answer is number: 2");
+            clientAns.setVisible(true);
+
+
             setChoice(2);
 
         });
 
         btn3.setOnAction(actionEvent -> {
-            System.out.println("btn3 was clicked");
+//            System.out.println("btn3 was clicked");
+            clientAns.setText("Your answer is number: 3");
+            clientAns.setVisible(true);
+
             setChoice(3);
 
         });
 
         btn4.setOnAction(actionEvent -> {
-            System.out.println("btn4 was clicked");
+//            System.out.println("btn4 was clicked");
+            clientAns.setText("Your answer is number: 4");
+            clientAns.setVisible(true);
             setChoice(4);
 
         });
@@ -166,18 +181,19 @@ public class Lobby {
     }
 
 
-
     public void setChoice(int choice) {
         setClicked(true);
         this.choice = choice;
     }
-    public static void showBtns(boolean vis){
+
+    public static void showBtns(boolean vis) {
         btn1.setVisible(vis);
         btn2.setVisible(vis);
         btn3.setVisible(vis);
         btn4.setVisible(vis);
 
     }
+
     public static boolean isClicked() {
         return clicked;
     }
@@ -185,7 +201,9 @@ public class Lobby {
     public static void setClicked(boolean clicked) {
         Lobby.clicked = clicked;
     }
+
     public static int getChoice() {
-            return choice;
+        clientAns.setVisible(false);
+        return choice;
     }
 }

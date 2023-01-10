@@ -37,7 +37,7 @@ public class Server {
             Lobby.clientsLogTxtAr.setText(logS);
 //            System.out.println(logS);
             int countClient = 0;
-            while (countClient < 2) {
+            while (countClient < 1) {
                 Socket client = socket.accept();
                 clientList.add(client);
                 countClient++;

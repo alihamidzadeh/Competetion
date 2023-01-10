@@ -36,14 +36,15 @@ public class ClientManager implements Runnable {
     }
 
 
+
     @Override
     public void run() {
         try {
             String logS = "";
             writer.println(Question.questions.size());
             for (int i = 0; i < Question.questions.size(); i++) {
-                logS = String.format("Question number: %d has asked.", i + 1);
-                Lobby.clientsLogTxtAr.appendText(logS);
+//                logS = String.format("Question number: %d has asked.", i + 1);
+//                Lobby.clientsLogTxtAr.appendText(logS);
 
                 writer.println(Question.questions.get(i).getQuest());
 
@@ -57,9 +58,10 @@ public class ClientManager implements Runnable {
 //                writer.println("type the number of your choice: ");
                 answer = Integer.parseInt(reader.readLine());
                 logS = String.format("answer client (%d) to question (%d) is: %d\n", client.getPort(), i + 1, answer);
-                Lobby.clientsLogTxtAr.appendText(logS);
+                soutLog(logS);
 
 //                sleep(10000); //TODO 15000
+                System.out.println(Question.questions.get(i).getAns());
                 if (answer == Question.questions.get(i).getAns()) {
                     //update score
                     Server.score.put(client.getPort(), Server.score.getOrDefault(client.getPort(), 0) + 1);
@@ -71,5 +73,9 @@ public class ClientManager implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    synchronized private void soutLog(String logS){
+        Lobby.clientsLogTxtAr.appendText(logS);
     }
 }

@@ -38,6 +38,7 @@ public class Client {
             int numberOfQuestions = Integer.parseInt(reader.readLine());
 //            System.out.println("numberOfQuestions= " + numberOfQuestions);
             for (int i = 0; i < numberOfQuestions; i++) {
+
                 Lobby.setClicked(false);
                 Lobby.showBtns(true);
                 answer = -1;
@@ -46,7 +47,7 @@ public class Client {
                 //choices:
                 quiz += "1:   " + reader.readLine() + "           " + "2:   " + reader.readLine() + "\n";
                 quiz += "3:   " + reader.readLine() + "           " + "4:   " + reader.readLine();
-                System.out.println(quiz);
+//                System.out.println(quiz);
                 Lobby.LogTxtAr.setText(quiz);
 
                 try {
@@ -56,11 +57,12 @@ public class Client {
                 }
                 if (Lobby.isClicked()) {
                     answer = Lobby.getChoice();
-                    System.out.println("answer is: " + answer);
+//                    System.out.println("answer is: " + answer);
 
                 }
                 if (answer == -1) {
-                    System.out.println("Time Out...");
+//                    System.out.println("Time Out...");
+
                     answer = 0;
                 }
                 writer.println(answer + "");
@@ -68,7 +70,11 @@ public class Client {
 ////                answer = GAthread.getAnswer();
 ////                GAthread.killThread();
 //                System.out.println(Server.score);
+
             }
+            Lobby.LogTxtAr.setText("Finished ...");
+            Lobby.showBtns(false);
+
 
         } catch (IOException e) {
             e.printStackTrace();
