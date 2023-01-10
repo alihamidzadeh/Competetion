@@ -16,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -55,10 +56,11 @@ public class Lobby {
         label2 = new Label("Can NOT Connect To Server ...");
         label2.setTextFill(Color.web("#595556"));
         label2.setStyle("-fx-font-size:20px");
+        LogTxtAr.setText("Waiting for others...\n");
         LogTxtAr.setStyle("-fx-font-size:17px; -fx-text-fill: #c746ff; -fx-font-weight: bold;");
         LogTxtAr.setDisable(false);
         LogTxtAr.setEditable(false);
-        LogTxtAr.setFont(Font.font("Verdana"));
+//        LogTxtAr.setFont(Font.loadFont("Resources/Font/B-NAZANIN.TTF", 120));
         LogTxtAr.setMaxSize(700, 150);
         LogTxtAr.setMinSize(500, 100);
 

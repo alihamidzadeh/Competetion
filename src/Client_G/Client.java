@@ -28,14 +28,7 @@ public class Client {
         setUserName(name);
 
         try {
-//                while (socket == null) {
             socket = new Socket(hostAddress, 8082/*, InetAddress.getByName(hostAddress), 5003 /*Client_G.Client Port */);
-//            System.out.println("Connected to the server!");
-//            Lobby.label2.setText("Connected to the server!");
-//                    if (socket.isConnected()){
-//                        break;
-//                    }
-//                }
             Lobby.label2.setText("Connected To Server!");
             fromServerStream = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
             toServerStream = new InputStreamReader(socket.getInputStream(), "UTF-8");
@@ -53,7 +46,6 @@ public class Client {
                 //choices:
                 quiz += "1:   " + reader.readLine() + "           " + "2:   " + reader.readLine() + "\n";
                 quiz += "3:   " + reader.readLine() + "           " + "4:   " + reader.readLine();
-
                 System.out.println(quiz);
                 Lobby.LogTxtAr.setText(quiz);
 

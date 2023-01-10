@@ -33,11 +33,11 @@ public class Server {
             if (!socket.isClosed())
                 socket.close();
             socket = new ServerSocket(8082);
-            String logS = "Server Created!\n", logC = "Waiting for others ...\n";
+            String logS = "Server Created!\n";
             Lobby.clientsLogTxtAr.setText(logS);
 //            System.out.println(logS);
             int countClient = 0;
-            while (countClient < 3) {
+            while (countClient < 2) {
                 Socket client = socket.accept();
                 clientList.add(client);
                 countClient++;
@@ -45,9 +45,6 @@ public class Server {
                 logS = String.format("client %d has connected!, port is: %d\n", countClient, client.getPort());
                 Lobby.clientsLogTxtAr.appendText(logS);
 
-                logC = String.format("client %d has connected!\n", countClient);
-                Client_G.Pages.Lobby.LogTxtAr.appendText(logC);
-//                System.out.println(logS);
                 Thread t = new Thread(new ClientManager(this, client));
                 threadList.add(t);
             }
