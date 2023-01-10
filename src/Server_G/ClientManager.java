@@ -20,6 +20,8 @@ public class ClientManager implements Runnable {
     PrintWriter writer;
     int answer = 0;
 
+    public static volatile HashMap<Integer, Integer> score = new HashMap<>();
+
 
     public ClientManager(Server server, Socket client) {
         this.server = server;
@@ -64,10 +66,11 @@ public class ClientManager implements Runnable {
                 System.out.println(Question.questions.get(i).getAns());
                 if (answer == Question.questions.get(i).getAns()) {
                     //update score
-                    Server.score.put(client.getPort(), Server.score.getOrDefault(client.getPort(), 0) + 1);
+                    ClientManager.score.put(client.getPort(), ClientManager.score.getOrDefault(client.getPort(), 0) + 1);
                 } else {
-                    Server.score.put(client.getPort(), Server.score.getOrDefault(client.getPort(), 0));
+                    ClientManager.score.put(client.getPort(), ClientManager.score.getOrDefault(client.getPort(), 0));
                 }
+                soutLog(ClientManager.score.toString());
             }
 //            while (true) ;
         } catch (Exception e) {

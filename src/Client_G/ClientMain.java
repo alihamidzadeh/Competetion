@@ -3,7 +3,7 @@ package Client_G;
 
 import javafx.application.Application;
 
-public class Main {
+public class ClientMain {
 
 
     public static void main(String[] args) {

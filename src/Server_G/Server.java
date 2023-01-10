@@ -13,7 +13,6 @@ public class Server {
     private int port;
     private String UserName;
 
-    public static volatile HashMap<Integer, Integer> score = new HashMap<>();
     String logS = "";
     public static ArrayList<Thread> threadList = new ArrayList<Thread>();
     public static ArrayList<Socket> clientList = new ArrayList<>();
@@ -37,7 +36,7 @@ public class Server {
             Lobby.clientsLogTxtAr.setText(logS);
 //            System.out.println(logS);
             int countClient = 0;
-            while (countClient < 1) {
+            while (countClient < 3) {
                 Socket client = socket.accept();
                 clientList.add(client);
                 countClient++;
