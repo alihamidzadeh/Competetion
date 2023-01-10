@@ -25,8 +25,8 @@ public class Question {
         this.ans = ans;
     }
 
-    public HashMap<Integer, String> getChoices() {
-        return choices;
+    public String getChoices(int i) {
+        return choices.get(i);
     }
 
     public void setChoices(HashMap<Integer, String> choices) {

@@ -59,8 +59,8 @@ public class Lobby {
         LogTxtAr.setDisable(false);
         LogTxtAr.setEditable(false);
         LogTxtAr.setFont(Font.font("Verdana"));
-        LogTxtAr.setMaxSize(600, 150);
-        LogTxtAr.setMinSize(400, 100);
+        LogTxtAr.setMaxSize(700, 150);
+        LogTxtAr.setMinSize(500, 100);
 
          btn1 = new Button("1");
          btn2 = new Button("2");
@@ -90,11 +90,11 @@ public class Lobby {
         VBox vbox = new VBox(20);
         vbox.setAlignment(Pos.CENTER);
 //        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        vbox.setLayoutX(100);
+        vbox.setLayoutX(45);
         vbox.setLayoutY(60);
         vbox.getChildren().addAll(label1, label2, LogTxtAr,hBox1,hBox2, backBtn);
         root.getChildren().add(vbox);
-        Scene scene1 = new Scene(root, 500, 300);
+        Scene scene1 = new Scene(root, 700, 300);
         stage.setScene(scene1);
         stage.setFullScreen(false);
         stage.setFullScreenExitHint("");

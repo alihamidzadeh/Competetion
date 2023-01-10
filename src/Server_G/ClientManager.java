@@ -42,8 +42,16 @@ public class ClientManager implements Runnable {
             String logS = "";
             writer.println(Question.questions.size());
             for (int i = 0; i < Question.questions.size(); i++) {
+                logS = String.format("Question number: %d has asked.", i + 1);
+                Lobby.clientsLogTxtAr.appendText(logS);
+
                 writer.println(Question.questions.get(i).getQuest());
-                writer.println(Question.questions.get(i).getChoices());
+
+                writer.println(Question.questions.get(i).getChoices(1));
+                writer.println(Question.questions.get(i).getChoices(2));
+                writer.println(Question.questions.get(i).getChoices(3));
+                writer.println(Question.questions.get(i).getChoices(4));
+
 //                System.out.println(Question.questions.get(i).getChoices());
                 //timer start
 //                writer.println("type the number of your choice: ");

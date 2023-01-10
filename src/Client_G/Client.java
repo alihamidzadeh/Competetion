@@ -49,7 +49,11 @@ public class Client {
                 Lobby.showBtns(true);
                 answer = -1;
                 quiz = "شماره سوال: " + (i + 1) + " از " + numberOfQuestions + "\n";
-                quiz += reader.readLine() + "\n\n" + reader.readLine();
+                quiz += reader.readLine() + "\n";
+                //choices:
+                quiz += "1:   " + reader.readLine() + "           " + "2:   " + reader.readLine() + "\n";
+                quiz += "3:   " + reader.readLine() + "           " + "4:   " + reader.readLine();
+
                 System.out.println(quiz);
                 Lobby.LogTxtAr.setText(quiz);
 
