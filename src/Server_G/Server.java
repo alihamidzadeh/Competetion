@@ -5,7 +5,9 @@ import Client_G.Pages.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Server {
@@ -14,7 +16,11 @@ public class Server {
     private String UserName;
 
     String logS = "";
-    public static ArrayList<Thread> threadList = new ArrayList<Thread>();
+
+    private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+
+    
+    public static ArrayList<ClientManager> threadList = new ArrayList<>();
     public static ArrayList<Socket> clientList = new ArrayList<>();
     //ArrayList<Client> threadList = new ArrayList<Thread>();
 
@@ -44,7 +50,7 @@ public class Server {
                 logS = String.format("client %d has connected!, port is: %d\n", countClient, client.getPort());
                 Lobby.clientsLogTxtAr.appendText(logS);
 
-                Thread t = new Thread(new ClientManager(this, client));
+                ClientManager t = new ClientManager(this, client, String.valueOf(client.getPort()));
                 threadList.add(t);
             }
             logS = "------------------------------------------\nQuiz has started ...\n";
@@ -67,6 +73,83 @@ public class Server {
         setPort(port);
         socket = new ServerSocket(port);
         this.serverStart();
+    }
+
+    private void display(String msg) {
+        String time = sdf.format(new Date()) + " " + msg;
+        System.out.println(time);
+    }
+
+    public synchronized boolean broadcast(String message) {
+        // add timestamp to the message
+        String time = sdf.format(new Date());
+
+        // to check if message is private i.e. client to client message
+        String[] w = message.split(" ",3);
+
+        boolean isPrivate = false;
+        if(w[1].charAt(0)=='@')
+            isPrivate=true;
+
+
+        // if private message, send message to mentioned username only
+        if(isPrivate==true)
+        {
+            String tocheck=w[1].substring(1, w[1].length());
+
+            message=w[0]+w[2];
+            String messageServerLog = time + " " + "from: " + w[0] + " to: " +w[1] + " message: " + w[2] + "\n";
+            // display message to server
+            System.out.print(messageServerLog);
+            String messageLf = time + " " + message + "\n";
+            boolean found=false;
+            // we loop in reverse order to find the mentioned username
+            for(int y=threadList.size(); --y>=0;)
+            {
+                ClientManager ct1 = threadList.get(y);
+                String check = ct1.getUsername();
+                if(check.equals(tocheck))
+                {
+                    // try to write to the Client if it fails remove it from the list
+                    if(!ct1.writeMsg(messageLf)) {
+                        threadList.remove(y);
+                        display("Disconnected Client " + ct1.getUsername() + " removed from list.");
+                    }
+                    // username found and delivered the message
+                    found=true;
+                    break;
+                }
+
+
+
+            }
+            // mentioned user not found, return false
+            if(found!=true)
+            {
+                return false;
+            }
+        }
+        // if message is a broadcast message
+        else
+        {
+            String messageLf = time + " " + message + "\n";
+            // display message
+            System.out.print(messageLf);
+
+            // we loop in reverse order in case we would have to remove a Client
+            // because it has disconnected
+            for(int i = threadList.size(); --i >= 0;) {
+                ClientManager ct = threadList.get(i);
+                // try to write to the Client if it fails remove it from the list
+                if(!ct.writeMsg(messageLf)) {
+                    threadList.remove(i);
+                    display("Disconnected Client " + ct.getUsername() + " removed from list.");
+                }
+            }
+        }
+        return true;
+
+
     }
 
     public int getPort() {

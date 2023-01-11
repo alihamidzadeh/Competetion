@@ -1,16 +1,11 @@
 package Client_G;
 
 import Client_G.Pages.Lobby;
-import Datas.Question;
-import Server_G.Server;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Arrays;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
-import java.util.concurrent.*;
-
-import static java.lang.System.exit;
 
 public class Client {
     public static Socket socket;
@@ -22,6 +17,11 @@ public class Client {
     PrintWriter writer;
     public static int answer;
     String hostAddress = "127.0.0.1";
+    boolean keepChatting = false;
+
+    private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+
+
 
     public Client(int port, String name) {
         setPort(port);
@@ -43,6 +43,8 @@ public class Client {
                 Lobby.showBtns(true);
                 answer = -1;
                 quiz = "شماره سوال: " + (i + 1) + " از " + numberOfQuestions + "\n";
+               // System.out.println(sdf.format(new Date()));
+
                 quiz += reader.readLine() + "\n";
                 //choices:
                 quiz += "1:   " + reader.readLine() + "           " + "2:   " + reader.readLine() + "\n";
@@ -70,7 +72,7 @@ public class Client {
 ////                answer = GAthread.getAnswer();
 ////                GAthread.killThread();
 //                System.out.println(Server.score);
-
+                Messaging();
             }
             Lobby.LogTxtAr.setText("Finished ...");
             Lobby.showBtns(false);
@@ -80,7 +82,67 @@ public class Client {
             e.printStackTrace();
         }
     }
+    private void display(String msg) {
 
+        System.out.println(msg);
+
+    }
+
+    //TODO
+    void sendMessage(String msg) {
+        writer.println(msg);
+    }
+
+    public void Messaging(){
+        keepChatting = true;
+        Scanner input = new Scanner(System.in);
+        ListenFromServer listenThread = new ListenFromServer();
+        listenThread.start();
+        while(keepChatting) {
+            System.out.print("> ");
+            // read message from user
+            String msg = input.nextLine();
+            // logout if message is LOGOUT
+            if(msg.contains("logout")) {
+                input.close();
+                keepChatting = false;
+                this.sendMessage("logout");
+                listenThread.stopT();
+
+                break;
+            }
+            // regular text message
+
+                this.sendMessage(msg);
+
+        }
+        // close resource
+        // client completed its job. disconnect client.
+        //client.disconnect();
+
+    }
+    class ListenFromServer extends Thread {
+
+        public void run() {
+            while(true) {
+                try {
+                    // read the message form the input datastream
+                    String msg = reader.readLine();
+                    System.out.println(msg);
+                    // print the message
+                   // System.out.println(msg);
+                    System.out.print("> ");
+                }
+                catch(IOException e) {
+                    display( "Server has closed the connection: " + e );
+                    break;
+                }
+            }
+        }
+        public void stopT(){
+            super.stop();
+        }
+    }
     public int getPort() {
         return port;
     }
