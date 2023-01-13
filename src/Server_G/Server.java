@@ -2,6 +2,7 @@ package Server_G;
 
 import Server_G.Pages.Lobby;
 import Client_G.Pages.*;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -19,43 +20,29 @@ public class Server {
 
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
-    
+
     public static ArrayList<ClientManager> threadList = new ArrayList<>();
     public static ArrayList<Socket> clientList = new ArrayList<>();
-    //ArrayList<Client> threadList = new ArrayList<Thread>();
-
-
-//    public static void main(String[] args) {
-//        try {
-//            new Server(8081, "host");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public void serverStart() {
         try {
-            if (!socket.isClosed())
+            if (socket != null && !socket.isClosed())
                 socket.close();
             socket = new ServerSocket(8082);
             String logS = "Server Created!\n";
             Lobby.clientsLogTxtAr.setText(logS);
-//            System.out.println(logS);
             int countClient = 0;
-            while (countClient < 3) {
+            while (countClient < 1) {
                 Socket client = socket.accept();
                 clientList.add(client);
                 countClient++;
-
                 logS = String.format("client %d has connected!, port is: %d\n", countClient, client.getPort());
                 Lobby.clientsLogTxtAr.appendText(logS);
-
                 ClientManager t = new ClientManager(this, client, String.valueOf(client.getPort()));
                 threadList.add(t);
             }
             logS = "------------------------------------------\nQuiz has started ...\n";
             Lobby.clientsLogTxtAr.appendText(logS);
-            Client_G.Pages.Lobby.LogTxtAr.setText(logS); //The previous text was deleted
             for (int i = 0; i < threadList.size(); i++) {
                 threadList.get(i).start();
             }
@@ -71,7 +58,6 @@ public class Server {
     public Server(int port, String name) throws IOException {
         setUserName(name);
         setPort(port);
-        socket = new ServerSocket(port);
         this.serverStart();
     }
 
@@ -85,63 +71,55 @@ public class Server {
         String time = sdf.format(new Date());
 
         // to check if message is private i.e. client to client message
-        String[] w = message.split(" ",3);
+        String[] w = message.split(" ", 3);
 
         boolean isPrivate = false;
-        if(w[1].charAt(0)=='@')
-            isPrivate=true;
+        if (w[1].charAt(0) == '@')
+            isPrivate = true;
 
 
         // if private message, send message to mentioned username only
-        if(isPrivate==true)
-        {
-            String tocheck=w[1].substring(1, w[1].length());
+        if (isPrivate) {
+            String tocheck = w[1].substring(1, w[1].length());
 
-            message=w[0]+w[2];
-            String messageServerLog = time + " " + "from: " + w[0] + " to: " +w[1] + " message: " + w[2] + "\n";
+            message = w[0] + w[2];
+            String messageServerLog = time + " " + "from: " + w[0] + " to: " + w[1] + " message: " + w[2] + "\n";
             // display message to server
             System.out.print(messageServerLog);
             String messageLf = time + " " + message + "\n";
-            boolean found=false;
+            boolean found = false;
             // we loop in reverse order to find the mentioned username
-            for(int y=threadList.size(); --y>=0;)
-            {
+            for (int y = threadList.size(); --y >= 0; ) {
                 ClientManager ct1 = threadList.get(y);
                 String check = ct1.getUsername();
-                if(check.equals(tocheck))
-                {
+                if (check.equals(tocheck)) {
                     // try to write to the Client if it fails remove it from the list
-                    if(!ct1.writeMsg(messageLf)) {
+                    if (!ct1.writeMsg(messageLf)) {
                         threadList.remove(y);
                         display("Disconnected Client " + ct1.getUsername() + " removed from list.");
                     }
                     // username found and delivered the message
-                    found=true;
+                    found = true;
                     break;
                 }
-
-
-
             }
             // mentioned user not found, return false
-            if(found!=true)
-            {
+            if (!found) {
                 return false;
             }
         }
         // if message is a broadcast message
-        else
-        {
+        else {
             String messageLf = time + " " + message + "\n";
             // display message
             System.out.print(messageLf);
 
             // we loop in reverse order in case we would have to remove a Client
             // because it has disconnected
-            for(int i = threadList.size(); --i >= 0;) {
+            for (int i = threadList.size(); --i >= 0; ) {
                 ClientManager ct = threadList.get(i);
                 // try to write to the Client if it fails remove it from the list
-                if(!ct.writeMsg(messageLf)) {
+                if (!ct.writeMsg(messageLf)) {
                     threadList.remove(i);
                     display("Disconnected Client " + ct.getUsername() + " removed from list.");
                 }

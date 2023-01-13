@@ -1,29 +1,20 @@
 package Client_G.Pages;
 
 import Client_G.Client;
-import Client_G.Graphic;
-import Server_G.Server;
+import Client_G.C_Graphic;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import static java.lang.System.exit;
 
@@ -40,7 +31,7 @@ public class Lobby {
 
 
     public void start(Stage stage) throws Exception {
-        Label label1 = new Label("Lobby");
+        Label label1 = new Label("Quiz Room");
         label1.setTextFill(Color.web("#c22d0c"));
         label1.setStyle("-fx-font-family: 'Arial Narrow';\n" +
                 "-fx-font-size: 40px;\n" +
@@ -107,12 +98,10 @@ public class Lobby {
         stage.setAlwaysOnTop(true);
         stage.show();
 
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent we) {
-                System.out.println("Lobby window is closing");
-                stage.close();
-                exit(0);
-            }
+        stage.setOnCloseRequest(we -> {
+            System.out.println("Lobby window is closing");
+            stage.close();
+            exit(0);
         });
 
         class serverThread extends Thread {
@@ -121,59 +110,47 @@ public class Lobby {
                 try {
                     Client socket = new Client(5230, "client1");
                 } catch (Exception e) {
-                    System.out.println("Can NOT Connected!");
+                    System.out.println("Can NOT Connect To Server!");
                     e.printStackTrace();
                 }
-
             }
         }
         serverThread t = new serverThread();
         t.start();
 
         btn1.setOnAction(actionEvent -> {
-//            System.out.println("btn1 was clicked");
             clientAns.setText("Your answer is number: 1");
             clientAns.setVisible(true);
-
             setChoice(1);
         });
 
         btn2.setOnAction(actionEvent -> {
-//            System.out.println("btn2 was clicked");
             clientAns.setText("Your answer is number: 2");
             clientAns.setVisible(true);
-
-
             setChoice(2);
-
         });
 
         btn3.setOnAction(actionEvent -> {
-//            System.out.println("btn3 was clicked");
             clientAns.setText("Your answer is number: 3");
             clientAns.setVisible(true);
-
             setChoice(3);
-
         });
 
         btn4.setOnAction(actionEvent -> {
-//            System.out.println("btn4 was clicked");
             clientAns.setText("Your answer is number: 4");
             clientAns.setVisible(true);
             setChoice(4);
-
         });
 
         backBtn.setOnAction(actionEvent -> {
-            Client_G.Graphic graphic = new Graphic();
+            C_Graphic CGraphic = new C_Graphic();
             try {
                 t.stop();
                 if (Client.socket != null) {
                     Client.socket.close();
                 }
 
-                graphic.start(stage);
+                CGraphic.start(stage);
             } catch (Exception exception) {
                 exception.printStackTrace();
             }

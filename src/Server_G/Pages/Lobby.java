@@ -1,10 +1,8 @@
 package Server_G.Pages;
 
-import Client_G.Client;
 import Server_G.*;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,9 +10,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
 import java.io.IOException;
 
 import static java.lang.System.exit;
@@ -24,7 +22,7 @@ public class Lobby {
     public static TextArea clientsLogTxtAr = new TextArea();
 
     public void start(Stage stage) throws Exception {
-        Label label1 = new Label("Lobby");
+        Label label1 = new Label("Logs Room");
         label1.setTextFill(Color.web("#c22d0c"));
         label1.setStyle("-fx-font-family: 'Arial Narrow';\n" +
                 "-fx-font-size: 40px;\n" +
@@ -91,7 +89,7 @@ public class Lobby {
         serverThread t = new serverThread();
         t.start();
         backBtn.setOnAction(actionEvent -> {
-            Graphic graphics = new Graphic();
+            S_Graphic graphics = new S_Graphic();
             try {
                 t.stop();
                 if (Server.socket != null) {

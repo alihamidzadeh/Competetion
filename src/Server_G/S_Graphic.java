@@ -19,7 +19,7 @@ import java.io.IOException;
 
 import static java.lang.System.exit;
 
-public class Graphic extends Application {
+public class S_Graphic extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {

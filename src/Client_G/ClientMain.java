@@ -7,6 +7,6 @@ public class ClientMain {
 
 
     public static void main(String[] args) {
-        Application.launch(Graphic.class, args);
+        Application.launch(C_Graphic.class, args);
     }
 }

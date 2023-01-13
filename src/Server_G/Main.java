@@ -7,6 +7,6 @@ public class Main {
 
 
     public static void main(String[] args) {
-        Application.launch(Graphic.class, args);
+        Application.launch(S_Graphic.class, args);
     }
 }

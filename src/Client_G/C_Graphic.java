@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-public class Graphic extends Application {
+public class C_Graphic extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {

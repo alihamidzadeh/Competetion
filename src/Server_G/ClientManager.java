@@ -50,7 +50,6 @@ public class ClientManager extends Thread {
     }
 
 
-
     @Override
     public void run() {
         try {
@@ -59,10 +58,10 @@ public class ClientManager extends Thread {
             for (int i = 0; i < Question.questions.size(); i++) {
 //                logS = String.format("Question number: %d has asked.", i + 1);
 //                Lobby.clientsLogTxtAr.appendText(logS);
-                Thread.sleep(3000);
-              //  System.out.println(Question.questions.get(i).getQuest() + sdf.format(new Date()));
+                Thread.sleep(3000); //TODO WHY
+                //  System.out.println(Question.questions.get(i).getQuest() + sdf.format(new Date()));
                 writer.println(Question.questions.get(i).getQuest());
-              //  System.out.println(sdf.format(new Date()));
+                //  System.out.println(sdf.format(new Date()));
 
                 writer.println(Question.questions.get(i).getChoices(1));
                 writer.println(Question.questions.get(i).getChoices(2));
@@ -85,10 +84,10 @@ public class ClientManager extends Thread {
                     ClientManager.score.put(client.getPort(), ClientManager.score.getOrDefault(client.getPort(), 0));
                 }
                 soutLog(ClientManager.score.toString());
-                Thread.sleep(5000);
+//                Thread.sleep(5000); //TODO WHY
 
-                inputMessages();
-                while(!checkChatExit());
+//                inputMessages();
+//                while (!checkChatExit()) ;
 
             }
 //            while (true) ;
@@ -96,35 +95,35 @@ public class ClientManager extends Thread {
             e.printStackTrace();
         }
     }
-    private boolean checkChatExit(){
+
+    private boolean checkChatExit() {
         int count = 0;
         for (int i = 0; i < Server.threadList.size(); i++) {
-            if(Server.threadList.get(i).keepGoing == false){
+            if (!Server.threadList.get(i).keepGoing) {
                 count++;
             }
         }
-        return (count == Server.threadList.size()) ? true : false;
+        return count == Server.threadList.size();
     }
+
     private void display(String msg) {
         String time = sdf.format(new Date()) + " " + msg;
         System.out.println(time);
     }
 
-    public
-    void inputMessages(){
+    public void inputMessages() {
         keepGoing = true;
         String message;
-        while(keepGoing) {
+        while (keepGoing) {
             try {
                 message = reader.readLine();
-            }
-            catch (IOException e) {
-                display(this.getUsername() + " Exception reading Streams: " + e);
+            } catch (IOException e) {
+                display(this.getUsername() + " Exception reading Streams: " + e); //TODO key lazem mishe?
                 break;
             }
 
             // different actions based on type message
-            if(message.contains("logout")){
+            if (message.contains("logout")) {
                 keepGoing = false;
                 boolean confirmation = server.broadcast(username + ": " + "has left the chat");
                 if (confirmation == false) {
@@ -132,8 +131,7 @@ public class ClientManager extends Thread {
                     this.writeMsg(msg);
                 }
                 break;
-            }
-            else {
+            } else {
                 boolean confirmation = server.broadcast(username + ": " + message);
                 if (confirmation == false) {
                     String msg = "Sorry. No such user exists.";
@@ -155,18 +153,18 @@ public class ClientManager extends Thread {
 
     public boolean writeMsg(String msg) {
         // if Client is still connected send the message to it
-        if(!client.isConnected()) {
-           // close();
+        if (!client.isConnected()) {
+            // close();
             return false;
         }
         // write the message to the stream
 
-            writer.println(msg);
+        writer.println(msg);
 
         return true;
     }
 
-    synchronized private void soutLog(String logS){
+    synchronized private void soutLog(String logS) {
         Lobby.clientsLogTxtAr.appendText(logS);
     }
 }
