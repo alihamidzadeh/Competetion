@@ -32,7 +32,7 @@ public class Server {
             String logS = "Server Created!\n";
             Lobby.clientsLogTxtAr.setText(logS);
             int countClient = 0;
-            while (countClient < 1) {
+            while (countClient < 3) {
                 Socket client = socket.accept();
                 clientList.add(client);
                 countClient++;
@@ -95,7 +95,7 @@ public class Server {
                 if (check.equals(tocheck)) {
                     // try to write to the Client if it fails remove it from the list
                     if (!ct1.writeMsg(messageLf)) {
-                        threadList.remove(y);
+//                        threadList.remove(y);
                         display("Disconnected Client " + ct1.getUsername() + " removed from list.");
                     }
                     // username found and delivered the message
@@ -120,7 +120,7 @@ public class Server {
                 ClientManager ct = threadList.get(i);
                 // try to write to the Client if it fails remove it from the list
                 if (!ct.writeMsg(messageLf)) {
-                    threadList.remove(i);
+//                    threadList.remove(i);
                     display("Disconnected Client " + ct.getUsername() + " removed from list.");
                 }
             }

@@ -86,8 +86,8 @@ public class ClientManager extends Thread {
                 soutLog(ClientManager.score.toString());
 //                Thread.sleep(5000); //TODO WHY
 
-//                inputMessages();
-//                while (!checkChatExit()) ;
+                inputMessages();
+                while (!checkChatExit()) ;
 
             }
 //            while (true) ;
@@ -153,7 +153,7 @@ public class ClientManager extends Thread {
 
     public boolean writeMsg(String msg) {
         // if Client is still connected send the message to it
-        if (!client.isConnected()) {
+        if (!client.isConnected() || !this.keepGoing) {
             // close();
             return false;
         }

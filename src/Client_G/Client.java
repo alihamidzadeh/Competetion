@@ -1,6 +1,7 @@
 package Client_G;
 
 import Client_G.Pages.Lobby;
+import javafx.application.Platform;
 
 import java.io.*;
 import java.net.Socket;
@@ -27,7 +28,9 @@ public class Client {
 
         try {
             socket = new Socket(hostAddress, 8082/*, InetAddress.getByName(hostAddress), 5003 /*Client_G.Client Port */);
-            Lobby.label2.setText("Connected To Server!");
+            Platform.runLater(() -> {
+                Lobby.label2.setText("Connected To Server!");
+            });
             fromServerStream = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
             toServerStream = new InputStreamReader(socket.getInputStream(), "UTF-8");
             reader = new BufferedReader(toServerStream);
@@ -36,9 +39,11 @@ public class Client {
             int numberOfQuestions = Integer.parseInt(reader.readLine());
 //            System.out.println("numberOfQuestions= " + numberOfQuestions);
             for (int i = 0; i < numberOfQuestions; i++) {
+                Platform.runLater(() -> {
+                    Lobby.setClicked(false);
+                    Lobby.showBtns(true);
+                });
 
-                Lobby.setClicked(false);
-                Lobby.showBtns(true);
                 answer = -1;
                 quiz = "شماره سوال: " + (i + 1) + " از " + numberOfQuestions + "\n";
                 // System.out.println(sdf.format(new Date()));
@@ -48,8 +53,11 @@ public class Client {
                 quiz += "1:   " + reader.readLine() + "           " + "2:   " + reader.readLine() + "\n";
                 quiz += "3:   " + reader.readLine() + "           " + "4:   " + reader.readLine();
 //                System.out.println(quiz);
-                Lobby.LogTxtAr.setText(quiz);
+                String finalQuiz = quiz;
+                Platform.runLater(() -> {
+                    Lobby.LogTxtAr.setText(finalQuiz);
 
+                });
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {
@@ -58,11 +66,9 @@ public class Client {
                 if (Lobby.isClicked()) {
                     answer = Lobby.getChoice();
 //                    System.out.println("answer is: " + answer);
-
                 }
                 if (answer == -1) {
 //                    System.out.println("Time Out...");
-
                     answer = 0;
                 }
                 writer.println(answer + "");
@@ -70,10 +76,12 @@ public class Client {
 ////                answer = GAthread.getAnswer();
 ////                GAthread.killThread();
 //                System.out.println(Server.score);
-//                Messaging();
+                Messaging();
             }
-            Lobby.LogTxtAr.setText("Finished ...");
-            Lobby.showBtns(false);
+            Platform.runLater(() -> {
+                Lobby.LogTxtAr.setText("Finished ...");
+                Lobby.showBtns(false);
+            });
 
 
         } catch (IOException e) {
