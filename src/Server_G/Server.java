@@ -39,7 +39,7 @@ public class Server {
                 countClient++;
                 logS = String.format("client %d has connected!, port is: %d\n", countClient, client.getPort());
                 Lobby.clientsLogTxtAr.appendText(logS);
-                ClientManager t = new ClientManager(this, client, String.valueOf(client.getPort()));
+                ClientManager t = new ClientManager(this, client, client.getPort());
                 threadList.add(t);
             }
             logS = "------------------------------------------\nQuiz has started ...\n";

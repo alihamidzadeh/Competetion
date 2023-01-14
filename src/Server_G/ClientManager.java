@@ -22,12 +22,13 @@ public class ClientManager extends Thread {
     BufferedReader reader;
     PrintWriter writer;
     int answer = 0;
+    int port;
     String username;
     public boolean online = false;
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
 
-    public static volatile HashMap<Integer, Integer> score = new HashMap<>();
+    public static volatile HashMap<String, Integer> score = new HashMap<>();
 
     public String getUsername() {
         return username;
@@ -37,16 +38,21 @@ public class ClientManager extends Thread {
         return online;
     }
 
-    public ClientManager(Server server, Socket client, String username) {
+    public ClientManager(Server server, Socket client, int port) {
         this.server = server;
         this.client = client;
-        this.username = username;
+        this.port = port;
 
         try {
             fromClientStream = new InputStreamReader(client.getInputStream(), "UTF-8");
             toClientStream = new OutputStreamWriter(client.getOutputStream(), "UTF-8");
             reader = new BufferedReader(fromClientStream);
             writer = new PrintWriter(toClientStream, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            this.username = reader.readLine().trim();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -84,9 +90,12 @@ public class ClientManager extends Thread {
 //                System.out.println(Question.questions.get(i).getAns());
                 if (answer == Question.questions.get(i).getAns()) {
                     //update score
-                    ClientManager.score.put(client.getPort(), ClientManager.score.getOrDefault(client.getPort(), 0) + 1);
-                } else {
-                    ClientManager.score.put(client.getPort(), ClientManager.score.getOrDefault(client.getPort(), 0));
+                    ClientManager.score.put(this.getUsername(), ClientManager.score.getOrDefault(this.getUsername(), 0) + 100);
+                } else if(answer == 0) {
+                    ClientManager.score.put(this.getUsername(), ClientManager.score.getOrDefault(this.getUsername(), 0));
+                }
+                else{
+                    ClientManager.score.put(this.getUsername(), ClientManager.score.getOrDefault(this.getUsername(), 0) - 100);
                 }
 
                 class test extends Thread {

@@ -38,6 +38,7 @@ public class Client {
             reader = new BufferedReader(toServerStream);
             writer = new PrintWriter(fromServerStream, true);
             String quiz;
+            writer.println(this.getUserName());
             int numberOfQuestions = Integer.parseInt(reader.readLine());
             int qDuration = Integer.parseInt(reader.readLine());
             int clientNumber = Integer.parseInt(reader.readLine());
