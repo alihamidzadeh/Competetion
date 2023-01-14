@@ -15,7 +15,8 @@ public class Server {
     public static ServerSocket socket;
     private int port;
     private String UserName;
-
+    public static final int qDuration = 10000; //10 second
+    private final int clientLimit = 2; //start the quiz with n clients
     String logS = "";
 
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -32,7 +33,7 @@ public class Server {
             String logS = "Server Created!\n";
             Lobby.clientsLogTxtAr.setText(logS);
             int countClient = 0;
-            while (countClient < 1) {
+            while (countClient < clientLimit) {
                 Socket client = socket.accept();
                 clientList.add(client);
                 countClient++;

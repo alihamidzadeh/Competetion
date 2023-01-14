@@ -3,6 +3,7 @@ package Server_G;
 import Server_G.Pages.Lobby;
 import Server_G.Server;
 import Datas.*;
+import javafx.application.Platform;
 
 import java.io.*;
 import java.net.Socket;
@@ -55,6 +56,9 @@ public class ClientManager extends Thread {
         try {
             String logS = "";
             writer.println(Question.questions.size());
+            writer.println(Server.qDuration);
+            writer.println(Server.threadList.size());
+
             for (int i = 0; i < Question.questions.size(); i++) {
 //                logS = String.format("Question number: %d has asked.", i + 1);
 //                Lobby.clientsLogTxtAr.appendText(logS);
@@ -72,28 +76,52 @@ public class ClientManager extends Thread {
                 //timer start
 //                writer.println("type the number of your choice: ");
                 answer = Integer.parseInt(reader.readLine());
-                logS = String.format("answer client (%d) to question (%d) is: %d\n", client.getPort(), i + 1, answer);
-                soutLog(logS);
+
 
 //                sleep(10000); //TODO 15000
-                System.out.println(Question.questions.get(i).getAns());
+//                System.out.println(Question.questions.get(i).getAns());
                 if (answer == Question.questions.get(i).getAns()) {
                     //update score
                     ClientManager.score.put(client.getPort(), ClientManager.score.getOrDefault(client.getPort(), 0) + 1);
                 } else {
                     ClientManager.score.put(client.getPort(), ClientManager.score.getOrDefault(client.getPort(), 0));
                 }
-                soutLog(ClientManager.score.toString());
-//                Thread.sleep(5000); //TODO WHY
 
-                inputMessages();
-                while (!checkChatExit()) ;
+                class test extends Thread {
+                    public void run() {
+                        sendScoreBoard();
+                    }
+                }
+                test t = new test();
+                t.start();
+
+                logS = String.format("answer client (%d) to question (%d) is: %d\n", client.getPort(), i + 1, answer);
+                String finalLogS = logS;
+                Platform.runLater(() -> {
+                    soutLog(finalLogS);
+                    soutLog(ClientManager.score.toString() + "\n");
+
+                });
+
+                Thread.sleep(5000); //for check scoreboard
+                t.stop();
+//                inputMessages();
+//                while (!checkChatExit()) ;
 
             }
 //            while (true) ;
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    synchronized private void sendScoreBoard() {
+        for (int j = 0; j < Server.threadList.size(); j++) {
+            writer.println(Server.threadList.get(j).client.getPort() + " " + score.get(Server.threadList.get(j).client.getPort()));
+//            writer.println();
+//            System.out.println(Server.threadList.get(j).client.getPort() + " - " + score.get(Server.threadList.get(j).client.getPort()));
+        }
+//        System.out.println("-----------------------");
     }
 
     private boolean checkChatExit() {

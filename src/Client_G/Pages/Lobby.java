@@ -28,7 +28,7 @@ public class Lobby {
     private static Button btn4;
     private static boolean clicked;
     private static Text clientAns;
-
+    public static ScoreBoard.Record[] recordsLobbyBackup;
 
     public void start(Stage stage) throws Exception {
         Label label1 = new Label("Quiz Room");
@@ -52,8 +52,8 @@ public class Lobby {
         LogTxtAr.setDisable(false);
         LogTxtAr.setEditable(false);
 //        LogTxtAr.setFont(Font.loadFont("Resources/Font/B-NAZANIN.TTF", 120));
-        LogTxtAr.setMaxSize(700, 150);
-        LogTxtAr.setMinSize(500, 100);
+        LogTxtAr.setMaxSize(620, 140);
+        LogTxtAr.setMinSize(400, 100);
 
         btn1 = new Button("1");
         btn2 = new Button("2");
@@ -82,7 +82,7 @@ public class Lobby {
         Button chatBtn = new Button("Chat");
         HBox hBox3 = new HBox(15);
         hBox3.setAlignment(Pos.CENTER);
-        hBox3.getChildren().addAll(scoreBtn,backBtn,chatBtn);
+        hBox3.getChildren().addAll(scoreBtn, backBtn, chatBtn);
         Pane root = new Pane();
         root.setStyle("-fx-background-color: linear-gradient(#f6fa00, #f6fa00); -fx-background-size: 100% 100%");
 
@@ -95,9 +95,10 @@ public class Lobby {
         vbox.setLayoutY(60);
         vbox.getChildren().addAll(label1, label2, LogTxtAr, hBox1, hBox2, clientAns, hBox3);
         root.getChildren().add(vbox);
-        Scene scene1 = new Scene(root, 700, 300);
+        Scene scene1 = new Scene(root, 800, 600);
         stage.setScene(scene1);
         stage.setFullScreen(false);
+        stage.setResizable(true);
         stage.setFullScreenExitHint("");
         stage.alwaysOnTopProperty();
         stage.setAlwaysOnTop(true);
@@ -147,10 +148,32 @@ public class Lobby {
             setChoice(4);
         });
 
-        scoreBtn.setOnAction(actionEvent ->{
-            ScoreBoard scoreBoard = new ScoreBoard();
-            Stage newstage = new Stage();
-            scoreBoard.start(newstage);
+        scoreBtn.setOnAction(actionEvent -> {
+            if (recordsLobbyBackup != null) {
+                ScoreBoard scoreBoard = new ScoreBoard(recordsLobbyBackup); //TODO set scoreboard
+                Stage newstage = new Stage();
+                scoreBoard.start(newstage);
+            } else {
+                Pane errP = new Pane();
+                VBox vBoxx = new VBox(10);
+                Label label = new Label("Score Board is Empty!");
+                Button buttonn = new Button("Back");
+                buttonn.setStyle("-fx-background-color: #ff0000;");
+
+                vBoxx.getChildren().addAll(label, buttonn);
+                vBoxx.setAlignment(Pos.CENTER);
+                errP.setStyle("-fx-background-color: #00ebeb; -fx-background-size: 100% 100%");
+                errP.getChildren().add(vBoxx);
+                Scene errScene = new Scene(errP, 120, 70);
+
+                Stage stage1 = new Stage();
+                stage1.setAlwaysOnTop(true);
+                stage1.setScene(errScene);
+                stage1.show();
+                buttonn.setOnAction(actionEvent1 -> {
+                    stage1.close();
+                });
+            }
         });
 
         backBtn.setOnAction(actionEvent -> {

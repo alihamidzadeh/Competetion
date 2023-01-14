@@ -1,7 +1,9 @@
 package Client_G;
 
 import Client_G.Pages.Lobby;
+import Client_G.Pages.ScoreBoard;
 import javafx.application.Platform;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.Socket;
@@ -22,7 +24,7 @@ public class Client {
 
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
-    public Client(int port, String name) {
+    public Client(int port, String name) throws InterruptedException {
         setPort(port);
         setUserName(name);
 
@@ -37,13 +39,14 @@ public class Client {
             writer = new PrintWriter(fromServerStream, true);
             String quiz;
             int numberOfQuestions = Integer.parseInt(reader.readLine());
-//            System.out.println("numberOfQuestions= " + numberOfQuestions);
+            int qDuration = Integer.parseInt(reader.readLine());
+            int clientNumber = Integer.parseInt(reader.readLine());
+
             for (int i = 0; i < numberOfQuestions; i++) {
                 Platform.runLater(() -> {
                     Lobby.setClicked(false);
                     Lobby.showBtns(true);
                 });
-
                 answer = -1;
                 quiz = "شماره سوال: " + (i + 1) + " از " + numberOfQuestions + "\n";
                 // System.out.println(sdf.format(new Date()));
@@ -59,7 +62,7 @@ public class Client {
 
                 });
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(qDuration);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -73,10 +76,9 @@ public class Client {
                 }
                 writer.println(answer + "");
 
-////                answer = GAthread.getAnswer();
-////                GAthread.killThread();
-//                System.out.println(Server.score);
-                Messaging();
+                recieveScores(clientNumber);
+
+//                Messaging();
             }
             Platform.runLater(() -> {
                 Lobby.LogTxtAr.setText("Finished ...");
@@ -84,15 +86,34 @@ public class Client {
             });
 
 
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private void recieveScores(int num) throws IOException {
+        ScoreBoard.Record[] records = new ScoreBoard.Record[num];
+        String str;
+        String[] data = new String[2];
+        for (int i = 0; i < num; i++) {
+            str = reader.readLine();
+            data = str.split(" ");
+            records[i] = new ScoreBoard.Record(data[0], Integer.parseInt(data[1]));
+        }
+
+        Platform.runLater(() -> {
+            Lobby.recordsLobbyBackup = records;
+            ScoreBoard scoreBoard = new ScoreBoard(records);
+            Stage stage = new Stage();
+            scoreBoard.start(stage);
+        });
+
+
+    }
+
     private void display(String msg) {
-
         System.out.println(msg);
-
     }
 
     //TODO
