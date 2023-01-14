@@ -53,6 +53,7 @@ public class ClientManager extends Thread {
         }
         try {
             this.username = reader.readLine().trim();
+            System.out.println("user is " + this.username);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -130,7 +131,7 @@ public class ClientManager extends Thread {
 
     synchronized private void sendScoreBoard() {
         for (int j = 0; j < Server.threadList.size(); j++) {
-            writer.println(Server.threadList.get(j).client.getPort() + " " + score.get(Server.threadList.get(j).client.getPort()));
+            writer.println(Server.threadList.get(j).getUsername() + " " + score.get(Server.threadList.get(j).getUsername()));
 //            writer.println();
 //            System.out.println(Server.threadList.get(j).client.getPort() + " - " + score.get(Server.threadList.get(j).client.getPort()));
         }

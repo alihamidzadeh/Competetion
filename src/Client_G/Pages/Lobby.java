@@ -114,7 +114,7 @@ public class Lobby {
             @Override
             public void run() {
                 try {
-                    Client socket = new Client(5230, "client2");
+                    Client socket = new Client(5230, "client1");
                 } catch (Exception e) {
                     System.out.println("Can NOT Connect To Server!");
                     e.printStackTrace();
