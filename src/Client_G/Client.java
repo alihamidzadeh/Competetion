@@ -137,11 +137,10 @@ public class Client {
                 continue;
             // logout if message is LOGOUT
             if (msg.contains("logout")) {
+                listenThread.stopT();
                 input.close();
                 keepChatting = false;
                 this.sendMessage("logout");
-                listenThread.stopT();
-
                 break;
             }
             // regular text message
@@ -176,6 +175,9 @@ public class Client {
         public void stopT() {
             super.stop();
         }
+    }
+    private void logout(){
+
     }
 
     public int getPort() {

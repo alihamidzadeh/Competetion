@@ -1,7 +1,6 @@
 package Server_G;
 
 import Server_G.Pages.Lobby;
-import Server_G.Server;
 import Datas.*;
 import javafx.application.Platform;
 
@@ -10,7 +9,6 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.text.SimpleDateFormat;
 
 
 import static java.lang.Thread.sleep;
@@ -25,7 +23,7 @@ public class ClientManager extends Thread {
     PrintWriter writer;
     int answer = 0;
     String username;
-    public boolean keepGoing = false;
+    public boolean online = false;
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
 
@@ -33,6 +31,10 @@ public class ClientManager extends Thread {
 
     public String getUsername() {
         return username;
+    }
+
+    public boolean isOnline() {
+        return online;
     }
 
     public ClientManager(Server server, Socket client, String username) {
@@ -62,7 +64,7 @@ public class ClientManager extends Thread {
             for (int i = 0; i < Question.questions.size(); i++) {
 //                logS = String.format("Question number: %d has asked.", i + 1);
 //                Lobby.clientsLogTxtAr.appendText(logS);
-//                Thread.sleep(3000); //TODO WHY
+                 Thread.sleep(3000); //TODO WHY because the sky is high
                 //  System.out.println(Question.questions.get(i).getQuest() + sdf.format(new Date()));
                 writer.println(Question.questions.get(i).getQuest());
                 //  System.out.println(sdf.format(new Date()));
@@ -108,6 +110,7 @@ public class ClientManager extends Thread {
                 t.stop();
                 inputMessages();
                 while (!checkChatExit()) ;
+                writer.println("chat finished");
 
             }
 //            while (true) ;
@@ -128,7 +131,7 @@ public class ClientManager extends Thread {
     private boolean checkChatExit() {
         int count = 0;
         for (int i = 0; i < Server.threadList.size(); i++) {
-            if (!Server.threadList.get(i).keepGoing) {
+            if (!Server.threadList.get(i).online) {
                 count++;
             }
         }
@@ -141,19 +144,19 @@ public class ClientManager extends Thread {
     }
 
     public void inputMessages() {
-        keepGoing = true;
+        online = true;
         String message;
-        while (keepGoing) {
+        while (online) {
             try {
                 message = reader.readLine();
             } catch (IOException e) {
-                display(this.getUsername() + " Exception reading Streams: " + e); //TODO key lazem mishe?
+                display(this.getUsername() + " Exception reading Streams: " + e); //TODO key lazem mishe?//readline ada da biare
                 break;
             }
 
             // different actions based on type message
             if (message.contains("logout")) {
-                keepGoing = false;
+                this.online = false;
                 boolean confirmation = server.broadcast(username + ": " + "has left the chat");
                 if (confirmation == false) {
                     String msg = "Sorry. No such user exists.";

@@ -68,7 +68,6 @@ public class Server {
     }
 
     public synchronized boolean broadcast(String message) {
-        // add timestamp to the message
         String time = sdf.format(new Date());
         // to check if message is private i.e. client to client message
 //       message = message.trim(); //TODO (Handle newline meessages)
@@ -86,13 +85,12 @@ public class Server {
         if (w[1].charAt(0) == '@')
                 isPrivate = true;
 
-
         // if private message, send message to mentioned username only
         if (isPrivate) {
             String tocheck = w[1].substring(1, w[1].length());
 
             message = w[0] + w[2];
-            String messageServerLog = time + " " + "from: " + w[0] + " to: " + w[1] + " message: " + w[2] + "\n";
+            String messageServerLog = time + " " + w[0] + " sent the following message to : " + w[1].substring(1, w[1].length()) + " | message: " + w[2] + "\n";
             // display message to server
             System.out.print(messageServerLog);
             String messageLf = time + " " + message + "\n";
@@ -102,14 +100,19 @@ public class Server {
                 ClientManager ct1 = threadList.get(y);
                 String check = ct1.getUsername();
                 if (check.equals(tocheck)) {
-                    // try to write to the Client if it fails remove it from the list
-                    if (!ct1.writeMsg(messageLf)) {
+                    if (ct1.isOnline()){
+                        // try to write to the Client if it fails remove it from the list
+                        if (!ct1.writeMsg(messageLf)) {
 //                        threadList.remove(y);
-                        display("Disconnected Client " + ct1.getUsername() + " removed from list.");
-                    }
+                            display("Disconnected Client " + ct1.getUsername() + " removed from list.");
+                        }
                     // username found and delivered the message
                     found = true;
                     break;
+                }
+                    else{
+                        display(ct1.getUsername() + ": is not online.");
+                    }
                 }
             }
             // mentioned user not found, return false
@@ -128,9 +131,14 @@ public class Server {
             for (int i = threadList.size(); --i >= 0; ) {
                 ClientManager ct = threadList.get(i);
                 // try to write to the Client if it fails remove it from the list
-                if (!ct.writeMsg(messageLf)) {
+                if (ct.isOnline()){
+                    if (!ct.writeMsg(messageLf)) {
 //                    threadList.remove(i);
-                    display("Disconnected Client " + ct.getUsername() + " removed from list.");
+                        display("Disconnected Client " + ct.getUsername() + " removed from list.");
+                    }
+                }
+                else{
+                    display(ct.getUsername() + ": is not online.");
                 }
             }
         }
