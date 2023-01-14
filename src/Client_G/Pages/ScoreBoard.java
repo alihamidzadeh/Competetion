@@ -31,7 +31,7 @@ import javafx.stage.WindowEvent;
 
 import java.util.ArrayList;
 
-public class ScoreBoard extends Application {
+public class ScoreBoard  {
     private static boolean run = false;
     private TableView table = new TableView();
     private ObservableList<Record> records;
@@ -46,7 +46,6 @@ public class ScoreBoard extends Application {
 
     }
 
-    @Override
     public void start(Stage stage) {
         Scene scene = new Scene(new Group());
         stage.setTitle("Score Board");

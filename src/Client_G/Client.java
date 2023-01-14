@@ -76,9 +76,9 @@ public class Client {
                 }
                 writer.println(answer + "");
 
-                recieveScores(clientNumber);
+                receiveScores(clientNumber);
 
-//                Messaging();
+                Messaging();
             }
             Platform.runLater(() -> {
                 Lobby.LogTxtAr.setText("Finished ...");
@@ -86,19 +86,21 @@ public class Client {
             });
 
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void recieveScores(int num) throws IOException {
+    private void receiveScores(int num) throws IOException, InterruptedException {
         ScoreBoard.Record[] records = new ScoreBoard.Record[num];
         String str;
         String[] data = new String[2];
         for (int i = 0; i < num; i++) {
+            Thread.sleep(700);
             str = reader.readLine();
+            Thread.sleep(500);
             data = str.split(" ");
+            System.out.println("data 1: " + data[0] + " --- data 2: " + data[1] + "\n");
             records[i] = new ScoreBoard.Record(data[0], Integer.parseInt(data[1]));
         }
 
@@ -130,6 +132,9 @@ public class Client {
             System.out.print("> ");
             // read message from user
             String msg = input.nextLine();
+            msg = msg.trim();
+            if (msg.equals("\n"))
+                continue;
             // logout if message is LOGOUT
             if (msg.contains("logout")) {
                 input.close();

@@ -92,6 +92,7 @@ public class ClientManager extends Thread {
                         sendScoreBoard();
                     }
                 }
+                Thread.sleep(500);
                 test t = new test();
                 t.start();
 
@@ -105,8 +106,8 @@ public class ClientManager extends Thread {
 
                 Thread.sleep(5000); //for check scoreboard
                 t.stop();
-//                inputMessages();
-//                while (!checkChatExit()) ;
+                inputMessages();
+                while (!checkChatExit()) ;
 
             }
 //            while (true) ;
@@ -181,7 +182,7 @@ public class ClientManager extends Thread {
 
     public boolean writeMsg(String msg) {
         // if Client is still connected send the message to it
-        if (!client.isConnected() || !this.keepGoing) {
+        if (!client.isConnected()) {
             // close();
             return false;
         }

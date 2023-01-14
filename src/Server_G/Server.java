@@ -70,13 +70,21 @@ public class Server {
     public synchronized boolean broadcast(String message) {
         // add timestamp to the message
         String time = sdf.format(new Date());
-
         // to check if message is private i.e. client to client message
+//       message = message.trim(); //TODO (Handle newline meessages)
+//        if (message.equals("\n")) {
+//            System.out.println("Invalid Message!\n");
+//            return false;
+//        }
+
         String[] w = message.split(" ", 3);
 
         boolean isPrivate = false;
+//        System.out.println("." + w[1] + ".\n");
+//        System.out.println("." + w[1].charAt(0) + ".\n");
+
         if (w[1].charAt(0) == '@')
-            isPrivate = true;
+                isPrivate = true;
 
 
         // if private message, send message to mentioned username only

@@ -156,15 +156,15 @@ public class Lobby {
             } else {
                 Pane errP = new Pane();
                 VBox vBoxx = new VBox(10);
-                Label label = new Label("Score Board is Empty!");
+                Label label = new Label("  Score Board is Empty!");
                 Button buttonn = new Button("Back");
                 buttonn.setStyle("-fx-background-color: #ff0000;");
 
                 vBoxx.getChildren().addAll(label, buttonn);
                 vBoxx.setAlignment(Pos.CENTER);
-                errP.setStyle("-fx-background-color: #00ebeb; -fx-background-size: 100% 100%");
+                errP.setStyle("-fx-background-color: #5ce54a; -fx-background-size: 100% 100%");
                 errP.getChildren().add(vBoxx);
-                Scene errScene = new Scene(errP, 120, 70);
+                Scene errScene = new Scene(errP, 130, 70);
 
                 Stage stage1 = new Stage();
                 stage1.setAlwaysOnTop(true);
