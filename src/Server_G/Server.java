@@ -32,7 +32,7 @@ public class Server {
             String logS = "Server Created!\n";
             Lobby.clientsLogTxtAr.setText(logS);
             int countClient = 0;
-            while (countClient < 3) {
+            while (countClient < 1) {
                 Socket client = socket.accept();
                 clientList.add(client);
                 countClient++;

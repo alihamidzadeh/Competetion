@@ -58,7 +58,7 @@ public class ClientManager extends Thread {
             for (int i = 0; i < Question.questions.size(); i++) {
 //                logS = String.format("Question number: %d has asked.", i + 1);
 //                Lobby.clientsLogTxtAr.appendText(logS);
-                Thread.sleep(3000); //TODO WHY
+//                Thread.sleep(3000); //TODO WHY
                 //  System.out.println(Question.questions.get(i).getQuest() + sdf.format(new Date()));
                 writer.println(Question.questions.get(i).getQuest());
                 //  System.out.println(sdf.format(new Date()));

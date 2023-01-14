@@ -77,7 +77,12 @@ public class Lobby {
         clientAns.setVisible(false);
         clientAns.setStyle("-fx-font-size:18px; -fx-font-weight: bold;");
 
+        Button scoreBtn = new Button("Score Button");
         Button backBtn = new Button("back");
+        Button chatBtn = new Button("Chat");
+        HBox hBox3 = new HBox(15);
+        hBox3.setAlignment(Pos.CENTER);
+        hBox3.getChildren().addAll(scoreBtn,backBtn,chatBtn);
         Pane root = new Pane();
         root.setStyle("-fx-background-color: linear-gradient(#f6fa00, #f6fa00); -fx-background-size: 100% 100%");
 
@@ -88,7 +93,7 @@ public class Lobby {
 //        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         vbox.setLayoutX(45);
         vbox.setLayoutY(60);
-        vbox.getChildren().addAll(label1, label2, LogTxtAr, hBox1, hBox2, clientAns, backBtn);
+        vbox.getChildren().addAll(label1, label2, LogTxtAr, hBox1, hBox2, clientAns, hBox3);
         root.getChildren().add(vbox);
         Scene scene1 = new Scene(root, 700, 300);
         stage.setScene(scene1);
@@ -140,6 +145,12 @@ public class Lobby {
             clientAns.setText("Your answer is number: 4");
             clientAns.setVisible(true);
             setChoice(4);
+        });
+
+        scoreBtn.setOnAction(actionEvent ->{
+            ScoreBoard scoreBoard = new ScoreBoard();
+            Stage newstage = new Stage();
+            scoreBoard.start(newstage);
         });
 
         backBtn.setOnAction(actionEvent -> {
