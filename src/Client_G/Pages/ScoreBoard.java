@@ -31,7 +31,7 @@ import javafx.stage.WindowEvent;
 
 import java.util.ArrayList;
 
-public class ScoreBoard  {
+public class ScoreBoard {
     private static boolean run = false;
     private TableView table = new TableView();
     private ObservableList<Record> records;
@@ -42,11 +42,9 @@ public class ScoreBoard  {
                         recordlist
                 );
     }
-    public ScoreBoard(){
-
-    }
 
     public void start(Stage stage) {
+
         Scene scene = new Scene(new Group());
         stage.setTitle("Score Board");
         stage.setWidth(300);
@@ -67,21 +65,20 @@ public class ScoreBoard  {
         scoreCol.setMinWidth(140);
 
         table.setItems(records);
-
         table.getColumns().addAll(usernameCol, scoreCol);
-        Button backBtn = new Button("Back");
 
-        final VBox vbox = new VBox();
-        vbox.setSpacing(5);
-        vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label, table, backBtn);
-        vbox.setAlignment(Pos.CENTER);
-        ((Group) scene.getRoot()).getChildren().addAll(vbox);
-        stage.setScene(scene);
-        stage.setAlwaysOnTop(true);
+        Button backBtn = new Button("Back");
 
         if (!run) {
             run = true;
+            final VBox vbox = new VBox();
+            vbox.setSpacing(5);
+            vbox.setPadding(new Insets(10, 0, 0, 10));
+            vbox.getChildren().addAll(label, table, backBtn);
+            vbox.setAlignment(Pos.CENTER);
+            ((Group) scene.getRoot()).getChildren().addAll(vbox);
+            stage.setScene(scene);
+            stage.setAlwaysOnTop(true);
             stage.show();
         }
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {

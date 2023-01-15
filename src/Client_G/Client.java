@@ -1,5 +1,6 @@
 package Client_G;
 
+import Client_G.Pages.Chat;
 import Client_G.Pages.Lobby;
 import Client_G.Pages.ScoreBoard;
 import javafx.application.Platform;
@@ -8,7 +9,6 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
-import java.util.Scanner;
 
 public class Client {
     public static Socket socket;
@@ -31,7 +31,7 @@ public class Client {
         try {
             socket = new Socket(hostAddress, 8082/*, InetAddress.getByName(hostAddress), 5003 /*Client_G.Client Port */);
             Platform.runLater(() -> {
-                Lobby.label2.setText("Connected To Server!");
+                Lobby.label2.setText(this.getUserName());
             });
             fromServerStream = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
             toServerStream = new InputStreamReader(socket.getInputStream(), "UTF-8");
@@ -45,8 +45,10 @@ public class Client {
 
             for (int i = 0; i < numberOfQuestions; i++) {
                 Platform.runLater(() -> {
+                    Lobby.chatBtn.setVisible(false);
                     Lobby.setClicked(false);
                     Lobby.showBtns(true);
+                    Lobby.clientAns.setVisible(false);
                 });
                 answer = -1;
                 quiz = "شماره سوال: " + (i + 1) + " از " + numberOfQuestions + "\n";
@@ -60,7 +62,6 @@ public class Client {
                 String finalQuiz = quiz;
                 Platform.runLater(() -> {
                     Lobby.LogTxtAr.setText(finalQuiz);
-
                 });
                 try {
                     Thread.sleep(qDuration);
@@ -69,10 +70,8 @@ public class Client {
                 }
                 if (Lobby.isClicked()) {
                     answer = Lobby.getChoice();
-//                    System.out.println("answer is: " + answer);
                 }
                 if (answer == -1) {
-//                    System.out.println("Time Out...");
                     answer = 0;
                 }
                 writer.println(answer + "");
@@ -124,22 +123,40 @@ public class Client {
         writer.println(msg);
     }
 
-    public void Messaging() {
+    public void Messaging() throws InterruptedException {
+        Platform.runLater(() -> {
+            Lobby.chatBtn.setVisible(true);
+        });
         keepChatting = true;
-        Scanner input = new Scanner(System.in);
+//        Scanner input = new Scanner(System.in);
         ListenFromServer listenThread = new ListenFromServer();
         listenThread.start();
+        System.out.println("Before Input");
+
         while (keepChatting) {
-            System.out.print("> ");
-            // read message from user
-            String msg = input.nextLine();
+            //Todo set a statements for get message from graphic
+            if (Chat.textField == null || Chat.sendBtn == null) {
+                System.out.println("shiiiit");
+                continue;
+            }
+            if (!Chat.sendBtn.isPressed()) {
+                System.out.println("NAaaa");
+                continue;
+            }
+            if (!Chat.pw){
+                System.out.println("sokhti");
+                continue;
+            }
+            String msg = Chat.textField.getText();
+            Chat.pw = false;
+            System.out.println("After Input\n" + msg);
             msg = msg.trim();
             if (msg.equals("\n"))
                 continue;
             // logout if message is LOGOUT
             if (msg.contains("logout")) {
                 listenThread.stopT();
-                input.close();
+//                input.close();
                 keepChatting = false;
                 this.sendMessage("logout");
                 break;
@@ -149,6 +166,7 @@ public class Client {
             this.sendMessage(msg);
 
         }
+
         // close resource
         // client completed its job. disconnect client.
         //client.disconnect();
@@ -177,7 +195,8 @@ public class Client {
             super.stop();
         }
     }
-    private void logout(){
+
+    private void logout() {
 
     }
 

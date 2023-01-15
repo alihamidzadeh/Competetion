@@ -16,6 +16,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.util.Random;
+
 import static java.lang.System.exit;
 
 public class Lobby {
@@ -27,8 +29,9 @@ public class Lobby {
     private static Button btn3;
     private static Button btn4;
     private static boolean clicked;
-    private static Text clientAns;
+    public static Text clientAns;
     public static ScoreBoard.Record[] recordsLobbyBackup;
+    public static Button chatBtn;
 
     public void start(Stage stage) throws Exception {
         Label label1 = new Label("Quiz Room");
@@ -79,7 +82,7 @@ public class Lobby {
 
         Button scoreBtn = new Button("Score Button");
         Button backBtn = new Button("back");
-        Button chatBtn = new Button("Chat");
+        chatBtn = new Button("Chat");
         HBox hBox3 = new HBox(15);
         hBox3.setAlignment(Pos.CENTER);
         hBox3.getChildren().addAll(scoreBtn, backBtn, chatBtn);
@@ -114,7 +117,7 @@ public class Lobby {
             @Override
             public void run() {
                 try {
-                    Client socket = new Client(5230, "client1");
+                    Client socket = new Client(5230, String.format("client_%d",new Random().nextInt(1000)));
                 } catch (Exception e) {
                     System.out.println("Can NOT Connect To Server!");
                     e.printStackTrace();
@@ -150,7 +153,7 @@ public class Lobby {
 
         scoreBtn.setOnAction(actionEvent -> {
             if (recordsLobbyBackup != null) {
-                ScoreBoard scoreBoard = new ScoreBoard(recordsLobbyBackup); //TODO set scoreboard
+                ScoreBoard scoreBoard = new ScoreBoard(recordsLobbyBackup);
                 Stage newstage = new Stage();
                 scoreBoard.start(newstage);
             } else {
@@ -189,6 +192,17 @@ public class Lobby {
                 exception.printStackTrace();
             }
         });
+
+        chatBtn.setOnAction(actionEvent -> {
+            Chat chat = new Chat();
+            Stage stage1 = new Stage();
+            try {
+                chat.start(stage1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 
 
@@ -214,7 +228,6 @@ public class Lobby {
     }
 
     public static int getChoice() {
-        clientAns.setVisible(false);
         return choice;
     }
 }

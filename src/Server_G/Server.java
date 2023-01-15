@@ -15,8 +15,8 @@ public class Server {
     public static ServerSocket socket;
     private int port;
     private String UserName;
-    public static final int qDuration = 10000; //10 second
-    private final int clientLimit = 2; //start the quiz with n clients
+    public static final int qDuration = 10; //10 second
+    private final int clientLimit = 1; //start the quiz with n clients
     String logS = "";
 
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
