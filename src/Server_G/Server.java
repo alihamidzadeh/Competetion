@@ -6,6 +6,7 @@ import Client_G.Pages.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,8 +34,18 @@ public class Server {
             String logS = "Server Created!\n";
             Lobby.clientsLogTxtAr.setText(logS);
             int countClient = 0;
-            while (countClient < clientLimit) {
-                Socket client = socket.accept();
+            while (true) {
+                Socket client;
+                if(countClient >= clientLimit) {
+                    socket.setSoTimeout(60000);
+                }
+                try {
+                    client = socket.accept();
+                }catch(SocketTimeoutException ste){
+                    //ste.printStackTrace();
+                    System.out.println("game start");
+                    break;
+                }
                 clientList.add(client);
                 countClient++;
                 logS = String.format("client %d has connected!, port is: %d\n", countClient, client.getPort());
