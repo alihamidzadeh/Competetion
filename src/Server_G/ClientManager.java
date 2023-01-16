@@ -1,7 +1,7 @@
 package Server_G;
 
+import Datas.Question;
 import Server_G.Pages.Lobby;
-import Datas.*;
 import javafx.application.Platform;
 
 import java.io.*;
@@ -9,9 +9,6 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-
-
-import static java.lang.Thread.sleep;
 
 public class ClientManager extends Thread {
     Socket client;
@@ -56,6 +53,12 @@ public class ClientManager extends Thread {
             System.out.println("user is " + this.username);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        initScores();
+    }
+    public static void initScores(){
+        for (int i = 0; i < Server.threadList.size(); i++) {
+            score.put(Server.threadList.get(i).getUsername(),0);
         }
     }
 

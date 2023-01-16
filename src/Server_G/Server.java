@@ -18,7 +18,7 @@ public class Server {
     private String UserName;
     public static final int qDuration = 10; //10 second
     private final int clientLimit = 1; //start the quiz with n clients
-    private final int waitingTime = 10; //60 second
+    private final int waitingTime = 30000; //60 second
     String logS = "";
 
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -56,6 +56,7 @@ public class Server {
             }
             logS = "------------------------------------------\nQuiz has started ...\n";
             Lobby.clientsLogTxtAr.appendText(logS);
+            ClientManager.initScores();
             for (int i = 0; i < threadList.size(); i++) {
                 threadList.get(i).start();
             }
@@ -136,7 +137,7 @@ public class Server {
         else {
             String messageLf = time + " " + message + "\n";
             // display message
-            System.out.print(messageLf);
+            display(messageLf);
 
             // we loop in reverse order in case we would have to remove a Client
             // because it has disconnected
