@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 public class Client {
     public static Socket socket;
     private int port;
-    private String UserName;
+    private static String UserName;
     InputStreamReader toServerStream;
     OutputStreamWriter fromServerStream;
     BufferedReader reader;
@@ -49,19 +49,17 @@ public class Client {
                     Lobby.setClicked(false);
                     Lobby.showBtns(true);
                     Lobby.clientAns.setVisible(false);
+                    Lobby.chatAlarm.setVisible(false);
                 });
                 answer = 0;
                 quiz = "شماره سوال: " + (i + 1) + " از " + numberOfQuestions + "\n";
-                // System.out.println(sdf.format(new Date()));
-
                 quiz += reader.readLine() + "\n";
                 //choices:
                 quiz += "1:   " + reader.readLine() + "           " + "2:   " + reader.readLine() + "\n";
                 quiz += "3:   " + reader.readLine() + "           " + "4:   " + reader.readLine();
-//                System.out.println(quiz);
                 String finalQuiz = quiz;
                 Platform.runLater(() -> {
-                    Lobby.LogTxtAr.setText(finalQuiz);
+                    Lobby.setQuiz(finalQuiz);
                 });
                 try {
                     Thread.sleep(qDuration);
@@ -96,7 +94,7 @@ public class Client {
     private void receiveScores(int num) throws IOException, InterruptedException {
         ScoreBoard.Record[] records = new ScoreBoard.Record[num];
         String str;
-        String[] data = new String[2];
+        String[] data;
         for (int i = 0; i < num; i++) {
             Thread.sleep(500);
             str = reader.readLine();
@@ -115,9 +113,7 @@ public class Client {
 
     }
 
-    //TODO
     private void display(String msg) {
-//        System.out.println(msg);
         Chat.receiveMessage(msg);
     }
 
@@ -190,7 +186,7 @@ public class Client {
         this.port = port;
     }
 
-    public String getUserName() {
+    public static String getUserName() {
         return UserName;
     }
 

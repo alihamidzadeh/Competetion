@@ -1,17 +1,5 @@
 package Client_G.Pages;
-//
-//import javafx.stage.Stage;
-//
-//public class ScoreBoard {
-//
-//    public void start(Stage stage) throws Exception{
-//
-//    }
-//}
 
-import Client_G.C_Graphic;
-import Client_G.Client;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -29,7 +17,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.util.ArrayList;
 
 public class ScoreBoard {
     private static boolean run = false;

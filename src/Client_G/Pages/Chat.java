@@ -13,6 +13,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
 public class Chat {
     public static ObservableList<ChatEntry> messages = FXCollections.observableArrayList();
     private TextField textField;
@@ -21,6 +23,7 @@ public class Chat {
     public static boolean pw = false;
 
     public void start(Stage primaryStage) throws InterruptedException {
+
         textField = new TextField();
         sendBtn = new Button("Send");
         Button logoutBtn = new Button("Logout");
@@ -35,11 +38,11 @@ public class Chat {
                 messageStr = textField.getText();
                 pw = true;
                 textField.clear();
-            }else {
+            } else {
                 Stage stage = new Stage();
                 Button button = new Button("OK");
                 button.setStyle("-fx-background-color: #e22828;");
-                VBox vBox = new VBox(10,new Label(" Invalid Text "), button);
+                VBox vBox = new VBox(10, new Label(" Invalid Text "), button);
                 vBox.setAlignment(Pos.CENTER);
                 Pane root = new Pane(vBox);
                 root.setStyle("-fx-background-color: #a6f0f0; -fx-background-size: 100% 100%");
@@ -63,9 +66,23 @@ public class Chat {
             primaryStage.close();
         });
 
+        HBox hBox1 = new HBox(2);
+
+        for (int i = 0; i < Lobby.recordsLobbyBackup.length; i++) {
+            if (Client.getUserName().equals(Lobby.recordsLobbyBackup[i].getUsername()))
+                continue;
+            String usrS = Lobby.recordsLobbyBackup[i].getUsername();
+            Button usrBtn = new Button(usrS);
+
+            usrBtn.setOnAction(evt -> {
+                textField.setText("@"+usrS+" ");
+            });
+
+            hBox1.getChildren().add(usrBtn);
+        }
         HBox hBox = new HBox(logoutBtn, textField, sendBtn);
         hBox.setAlignment(Pos.CENTER_RIGHT);
-        VBox vbox = new VBox(10, listView, hBox);
+        VBox vbox = new VBox(10, hBox1, listView, hBox);
         Scene scene = new Scene(vbox);
         primaryStage.setAlwaysOnTop(true);
         primaryStage.setScene(scene);

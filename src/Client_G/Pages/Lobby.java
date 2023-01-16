@@ -7,7 +7,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -34,6 +36,7 @@ public class Lobby {
     public static ScoreBoard.Record[] recordsLobbyBackup;
     public static Button chatBtn;
     public static String usrTitle;
+    public static ProgressBar progressBar;
 
     public void start(Stage stage) throws Exception {
         usrTitle = String.format("%d", new Random().nextInt(100));
@@ -53,6 +56,8 @@ public class Lobby {
         label2 = new Label("Can NOT Connect To Server ...");
         label2.setTextFill(Color.web("#595556"));
         label2.setStyle("-fx-font-size:20px");
+
+        progressBar = new ProgressBar();
         LogTxtAr.setText("Waiting for others...\n");
         LogTxtAr.setStyle("-fx-font-size:17px; -fx-text-fill: #c746ff; -fx-font-weight: bold;");
         LogTxtAr.setDisable(false);
@@ -76,6 +81,7 @@ public class Lobby {
         hBox1.setAlignment(Pos.CENTER);
         hBox2.setAlignment(Pos.CENTER);
 
+
         hBox1.getChildren().addAll(btn1, btn2);
         hBox2.getChildren().addAll(btn3, btn4);
 
@@ -84,9 +90,9 @@ public class Lobby {
         clientAns.setStyle("-fx-font-size:18px; -fx-font-weight: bold;");
         chatAlarm = new Text("Need to Logout from chatroom for continue quiz!");
         chatAlarm.setStyle("-fx-background-color: white; -fx-font-size:18px; -fx-font-weight: bold;");
-        chatAlarm.setVisible(true);
+//        chatAlarm.setVisible(true);
 
-        Button scoreBtn = new Button("Score Button");
+        Button scoreBtn = new Button("Score");
         Button backBtn = new Button("back");
         Button clearAns = new Button("Clear");
         chatBtn = new Button("Chat");
@@ -107,7 +113,7 @@ public class Lobby {
         vbox.setAlignment(Pos.CENTER);
         vbox.setLayoutX((stageWidth / 2) - (stageWidth / 2.3));
         vbox.setLayoutY(10);
-        vbox.getChildren().addAll(label1, label2, LogTxtAr, hBox1, hBox2, clientAns, chatAlarm, hBox3);
+        vbox.getChildren().addAll(label1, label2, progressBar, LogTxtAr, hBox1, hBox2, clientAns, chatAlarm, hBox3);
         root.getChildren().add(vbox);
         Scene scene1 = new Scene(root, stageWidth, stageHeight);
         stage.setScene(scene1);
@@ -243,6 +249,13 @@ public class Lobby {
         });
     }
 
+
+    public static void setQuiz(String quize) {
+        if (progressBar.isVisible()) {
+            progressBar.setVisible(false);
+        }
+        LogTxtAr.setText(quize);
+    }
 
     public void setChoice(int choice) {
         setClicked(true);
