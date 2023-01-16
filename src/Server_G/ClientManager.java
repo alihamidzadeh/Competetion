@@ -71,7 +71,7 @@ public class ClientManager extends Thread {
             for (int i = 0; i < Question.questions.size(); i++) {
 //                logS = String.format("Question number: %d has asked.", i + 1);
 //                Lobby.clientsLogTxtAr.appendText(logS);
-                 Thread.sleep(3000); //TODO WHY because the sky is high
+                Thread.sleep(200); //TODO WHY?, because the sky is high, OKay I reduced it.
                 //  System.out.println(Question.questions.get(i).getQuest() + sdf.format(new Date()));
                 writer.println(Question.questions.get(i).getQuest());
                 //  System.out.println(sdf.format(new Date()));
@@ -81,34 +81,28 @@ public class ClientManager extends Thread {
                 writer.println(Question.questions.get(i).getChoices(3));
                 writer.println(Question.questions.get(i).getChoices(4));
 
-//                System.out.println(Question.questions.get(i).getChoices());
                 //timer start
-//                writer.println("type the number of your choice: ");
                 answer = Integer.parseInt(reader.readLine());
+                logS = String.format("answer client (%d) to question (%d) is: %d\n", client.getPort(), i + 1, answer);
 
-
-//                sleep(10000); //TODO 15000
-//                System.out.println(Question.questions.get(i).getAns());
-                if (answer == Question.questions.get(i).getAns()) {
-                    //update score
+                Thread.sleep(200);
+                //update score
+                if (answer == Question.questions.get(i).getAns())
                     ClientManager.score.put(this.getUsername(), ClientManager.score.getOrDefault(this.getUsername(), 0) + 100);
-                } else if(answer == 0) {
+                else if (answer == 0)
                     ClientManager.score.put(this.getUsername(), ClientManager.score.getOrDefault(this.getUsername(), 0));
-                }
-                else{
+                else
                     ClientManager.score.put(this.getUsername(), ClientManager.score.getOrDefault(this.getUsername(), 0) - 100);
-                }
+
 
                 class test extends Thread {
                     public void run() {
                         sendScoreBoard();
                     }
                 }
-                Thread.sleep(500);
                 test t = new test();
                 t.start();
 
-                logS = String.format("answer client (%d) to question (%d) is: %d\n", client.getPort(), i + 1, answer);
                 String finalLogS = logS;
                 Platform.runLater(() -> {
                     soutLog(finalLogS);
@@ -116,8 +110,8 @@ public class ClientManager extends Thread {
 
                 });
 
-                Thread.sleep(5000); //for check scoreboard
-                t.stop();
+//                Thread.sleep(5000); //for check scoreboard
+//                t.stop();
                 inputMessages();
                 while (!checkChatExit()) ;
                 writer.println("chat finished");
@@ -130,12 +124,13 @@ public class ClientManager extends Thread {
     }
 
     synchronized private void sendScoreBoard() {
+        String str;
         for (int j = 0; j < Server.threadList.size(); j++) {
-            writer.println(Server.threadList.get(j).getUsername() + " " + score.get(Server.threadList.get(j).getUsername()));
-//            writer.println();
-//            System.out.println(Server.threadList.get(j).client.getPort() + " - " + score.get(Server.threadList.get(j).client.getPort()));
+            str = Server.threadList.get(j).getUsername(); //username
+            str = str + " " + score.get(str); // username score (Optimized)
+            writer.println(str);
+            System.out.println(str);
         }
-//        System.out.println("-----------------------");
     }
 
     private boolean checkChatExit() {

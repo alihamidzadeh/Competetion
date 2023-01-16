@@ -54,19 +54,22 @@ public class Lobby {
 
 //        root.setStyle("-fx-background-image: url('https://i.pinimg.com/originals/cf/4e/7e/cf4e7ef82f683fcc564d78e786511559.gif'); -fx-background-size: 100% 100%");
 
-        VBox vbox = new VBox(20);
+        VBox vbox = new VBox(12);
         vbox.setAlignment(Pos.CENTER);
-//        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        vbox.setLayoutX(100);
-        vbox.setLayoutY(60);
         vbox.getChildren().addAll(label1, label2, clientsLogTxtAr, backBtn);
+        int stageWidth = 800;
+        int stageHeight = 550;
+        vbox.setLayoutX((stageWidth / 2) - (stageWidth / 2.7));
+        vbox.setLayoutY(20);
         root.getChildren().add(vbox);
-        Scene scene1 = new Scene(root, 500, 600);
+        Scene scene1 = new Scene(root, stageWidth, stageHeight);
         stage.setScene(scene1);
-        stage.setFullScreen(false);
-        stage.setFullScreenExitHint("");
-        stage.alwaysOnTopProperty();
-        stage.setAlwaysOnTop(true);
+        stage.setAlwaysOnTop(false);
+        stage.setTitle("Server Logs");
+        stage.setWidth(stageWidth);
+        stage.setHeight(stageHeight);
+        stage.setX(200);
+        stage.setY(300);
         stage.show();
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {

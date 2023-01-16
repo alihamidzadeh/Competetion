@@ -18,6 +18,7 @@ public class Server {
     private String UserName;
     public static final int qDuration = 10; //10 second
     private final int clientLimit = 1; //start the quiz with n clients
+    private final int waitingTime = 10; //60 second
     String logS = "";
 
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -37,7 +38,7 @@ public class Server {
             while (true) {
                 Socket client;
                 if(countClient >= clientLimit) {
-                    socket.setSoTimeout(60000);
+                    socket.setSoTimeout(waitingTime);
                 }
                 try {
                     client = socket.accept();

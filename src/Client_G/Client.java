@@ -21,7 +21,7 @@ public class Client {
     public static int answer;
     String hostAddress = "127.0.0.1";
     boolean keepChatting = false;
-
+    public static boolean chatPermit = false;
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
     public Client(int port, String name) throws InterruptedException {
@@ -44,13 +44,13 @@ public class Client {
             int clientNumber = Integer.parseInt(reader.readLine());
 
             for (int i = 0; i < numberOfQuestions; i++) {
+                chatPermit = false;
                 Platform.runLater(() -> {
-                    Lobby.chatBtn.setVisible(false);
                     Lobby.setClicked(false);
                     Lobby.showBtns(true);
                     Lobby.clientAns.setVisible(false);
                 });
-                answer = -1;
+                answer = 0;
                 quiz = "شماره سوال: " + (i + 1) + " از " + numberOfQuestions + "\n";
                 // System.out.println(sdf.format(new Date()));
 
@@ -70,16 +70,18 @@ public class Client {
                 }
                 if (Lobby.isClicked()) {
                     answer = Lobby.getChoice();
-                }
-                if (answer == -1) {
+                } else {
                     answer = 0;
                 }
                 writer.println(answer + "");
 
                 receiveScores(clientNumber);
-
+                chatPermit = true;
                 Messaging();
             }
+
+            chatPermit = false;
+            Thread.sleep(1000);
             Platform.runLater(() -> {
                 Lobby.LogTxtAr.setText("Finished ...");
                 Lobby.showBtns(false);
@@ -96,15 +98,14 @@ public class Client {
         String str;
         String[] data = new String[2];
         for (int i = 0; i < num; i++) {
-            Thread.sleep(700);
-            str = reader.readLine();
             Thread.sleep(500);
+            str = reader.readLine();
             data = str.split(" ");
-            System.out.println("data 1: " + data[0] + " --- data 2: " + data[1] + "\n");
-            records[i] = new ScoreBoard.Record(data[0], Integer.parseInt(data[1]));
+            records[i] = new ScoreBoard.Record(data[0], data[1]);
         }
 
         Platform.runLater(() -> {
+            Lobby.chatAlarm.setVisible(true);
             Lobby.recordsLobbyBackup = records;
             ScoreBoard scoreBoard = new ScoreBoard(records);
             Stage stage = new Stage();
@@ -114,49 +115,33 @@ public class Client {
 
     }
 
+    //TODO
     private void display(String msg) {
-        System.out.println(msg);
+//        System.out.println(msg);
+        Chat.receiveMessage(msg);
     }
 
-    //TODO
     void sendMessage(String msg) {
         writer.println(msg);
     }
 
     public void Messaging() throws InterruptedException {
-        Platform.runLater(() -> {
-            Lobby.chatBtn.setVisible(true);
-        });
         keepChatting = true;
-//        Scanner input = new Scanner(System.in);
         ListenFromServer listenThread = new ListenFromServer();
         listenThread.start();
-        System.out.println("Before Input");
 
         while (keepChatting) {
-            //Todo set a statements for get message from graphic
-            if (Chat.textField == null || Chat.sendBtn == null) {
-                System.out.println("shiiiit");
+            if (!Chat.pw) {
+                Thread.sleep(300);
                 continue;
             }
-            if (!Chat.sendBtn.isPressed()) {
-                System.out.println("NAaaa");
-                continue;
-            }
-            if (!Chat.pw){
-                System.out.println("sokhti");
-                continue;
-            }
-            String msg = Chat.textField.getText();
             Chat.pw = false;
-            System.out.println("After Input\n" + msg);
+            String msg = Chat.messageStr;
             msg = msg.trim();
             if (msg.equals("\n"))
                 continue;
-            // logout if message is LOGOUT
             if (msg.contains("logout")) {
                 listenThread.stopT();
-//                input.close();
                 keepChatting = false;
                 this.sendMessage("logout");
                 break;
@@ -178,12 +163,9 @@ public class Client {
         public void run() {
             while (true) {
                 try {
-                    // read the message form the input datastream
+                    // read the message form the input data stream
                     String msg = reader.readLine();
-                    System.out.println(msg);
-                    // print the message
-                    // System.out.println(msg);
-                    System.out.print("> ");
+                    display(msg);
                 } catch (IOException e) {
                     display("Server has closed the connection: " + e);
                     break;

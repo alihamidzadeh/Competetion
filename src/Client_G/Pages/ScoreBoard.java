@@ -49,8 +49,8 @@ public class ScoreBoard {
         stage.setTitle("Score Board");
         stage.setWidth(300);
         stage.setHeight(550);
-
         final Label label = new Label("Users Score");
+
         label.setFont(new Font("Arial", 20));
 
         table.setEditable(true);
@@ -79,6 +79,7 @@ public class ScoreBoard {
             ((Group) scene.getRoot()).getChildren().addAll(vbox);
             stage.setScene(scene);
             stage.setAlwaysOnTop(true);
+            stage.setTitle(Lobby.usrTitle);
             stage.show();
         }
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -98,9 +99,14 @@ public class ScoreBoard {
         private String username;
         private int score;
 
-        public Record(String username, int score) {
+        public Record(String username, String score) {
             this.username = username;
-            this.score = score;
+            if (!score.equals("null"))
+                this.score = Integer.parseInt(score);
+            else {
+                System.err.println("The score is " + score);
+                this.score = 9999;
+            }
         }
 
         public String getUsername() {

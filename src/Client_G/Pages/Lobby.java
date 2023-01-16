@@ -30,10 +30,13 @@ public class Lobby {
     private static Button btn4;
     private static boolean clicked;
     public static Text clientAns;
+    public static Text chatAlarm;
     public static ScoreBoard.Record[] recordsLobbyBackup;
     public static Button chatBtn;
+    public static String usrTitle;
 
     public void start(Stage stage) throws Exception {
+        usrTitle = String.format("%d", new Random().nextInt(100));
         Label label1 = new Label("Quiz Room");
         label1.setTextFill(Color.web("#c22d0c"));
         label1.setStyle("-fx-font-family: 'Arial Narrow';\n" +
@@ -79,31 +82,38 @@ public class Lobby {
         clientAns = new Text();
         clientAns.setVisible(false);
         clientAns.setStyle("-fx-font-size:18px; -fx-font-weight: bold;");
+        chatAlarm = new Text("Need to Logout from chatroom for continue quiz!");
+        chatAlarm.setStyle("-fx-background-color: white; -fx-font-size:18px; -fx-font-weight: bold;");
+        chatAlarm.setVisible(true);
 
         Button scoreBtn = new Button("Score Button");
         Button backBtn = new Button("back");
+        Button clearAns = new Button("Clear");
         chatBtn = new Button("Chat");
-        HBox hBox3 = new HBox(15);
+        VBox vBox = new VBox(25);
+        vBox.setAlignment(Pos.CENTER);
+        vBox.getChildren().addAll(clearAns, backBtn);
+        HBox hBox3 = new HBox(10);
         hBox3.setAlignment(Pos.CENTER);
-        hBox3.getChildren().addAll(scoreBtn, backBtn, chatBtn);
+        hBox3.getChildren().addAll(scoreBtn, vBox, chatBtn);
+
         Pane root = new Pane();
         root.setStyle("-fx-background-color: linear-gradient(#f6fa00, #f6fa00); -fx-background-size: 100% 100%");
 
-//        root.setStyle("-fx-background-image: url('https://i.pinimg.com/originals/cf/4e/7e/cf4e7ef82f683fcc564d78e786511559.gif'); -fx-background-size: 100% 100%");
 
-        VBox vbox = new VBox(20);
+        VBox vbox = new VBox(10);
+        int stageWidth = 720;
+        int stageHeight = 600;
         vbox.setAlignment(Pos.CENTER);
-//        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        vbox.setLayoutX(45);
-        vbox.setLayoutY(60);
-        vbox.getChildren().addAll(label1, label2, LogTxtAr, hBox1, hBox2, clientAns, hBox3);
+        vbox.setLayoutX((stageWidth / 2) - (stageWidth / 2.3));
+        vbox.setLayoutY(10);
+        vbox.getChildren().addAll(label1, label2, LogTxtAr, hBox1, hBox2, clientAns, chatAlarm, hBox3);
         root.getChildren().add(vbox);
-        Scene scene1 = new Scene(root, 800, 600);
+        Scene scene1 = new Scene(root, stageWidth, stageHeight);
         stage.setScene(scene1);
-        stage.setFullScreen(false);
+        stage.setWidth(stageWidth);
+        stage.setHeight(stageHeight);
         stage.setResizable(true);
-        stage.setFullScreenExitHint("");
-        stage.alwaysOnTopProperty();
         stage.setAlwaysOnTop(true);
         stage.show();
 
@@ -113,15 +123,17 @@ public class Lobby {
             exit(0);
         });
 
+        stage.setTitle(usrTitle);
         class serverThread extends Thread {
             @Override
             public void run() {
                 try {
-                    Client socket = new Client(5230, String.format("client_%d",new Random().nextInt(1000)));
+                    Client socket = new Client(5230, usrTitle);
                 } catch (Exception e) {
                     System.out.println("Can NOT Connect To Server!");
                     e.printStackTrace();
                 }
+
             }
         }
         serverThread t = new serverThread();
@@ -150,6 +162,12 @@ public class Lobby {
             clientAns.setVisible(true);
             setChoice(4);
         });
+        clearAns.setOnAction(actionEvent -> {
+            clientAns.setText("Your answer was clear");
+            clientAns.setVisible(true);
+            setChoice(0);
+        });
+
 
         scoreBtn.setOnAction(actionEvent -> {
             if (recordsLobbyBackup != null) {
@@ -194,15 +212,35 @@ public class Lobby {
         });
 
         chatBtn.setOnAction(actionEvent -> {
-            Chat chat = new Chat();
-            Stage stage1 = new Stage();
-            try {
-                chat.start(stage1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (Client.chatPermit) {
+                Chat chat = new Chat();
+                Stage stage1 = new Stage();
+                try {
+                    chat.start(stage1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Pane errP = new Pane();
+                VBox vBoxx = new VBox(10);
+                Label label = new Label("  Can't CHAT now!");
+                Button buttonn = new Button("Back");
+                buttonn.setStyle("-fx-background-color: #ff0000;");
+
+                vBoxx.getChildren().addAll(label, buttonn);
+                vBoxx.setAlignment(Pos.CENTER);
+                errP.setStyle("-fx-background-color: #5ce54a; -fx-background-size: 100% 100%");
+                errP.getChildren().add(vBoxx);
+
+                Stage stage1 = new Stage();
+                stage1.setAlwaysOnTop(true);
+                stage1.setScene(new Scene(errP, 130, 70));
+                stage1.show();
+                buttonn.setOnAction(actionEvent1 -> {
+                    stage1.close();
+                });
             }
         });
-
     }
 
 
