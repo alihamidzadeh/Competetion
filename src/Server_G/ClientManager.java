@@ -56,9 +56,10 @@ public class ClientManager extends Thread {
         }
         initScores();
     }
-    public static void initScores(){
+
+    public static void initScores() {
         for (int i = 0; i < Server.threadList.size(); i++) {
-            score.put(Server.threadList.get(i).getUsername(),0);
+            score.put(Server.threadList.get(i).getUsername(), 0);
         }
     }
 
@@ -72,12 +73,8 @@ public class ClientManager extends Thread {
             writer.println(Server.threadList.size());
 
             for (int i = 0; i < Question.questions.size(); i++) {
-//                logS = String.format("Question number: %d has asked.", i + 1);
-//                Lobby.clientsLogTxtAr.appendText(logS);
                 Thread.sleep(200); //TODO WHY?, because the sky is high, OKay I reduced it.
-                //  System.out.println(Question.questions.get(i).getQuest() + sdf.format(new Date()));
                 writer.println(Question.questions.get(i).getQuest());
-                //  System.out.println(sdf.format(new Date()));
 
                 writer.println(Question.questions.get(i).getChoices(1));
                 writer.println(Question.questions.get(i).getChoices(2));
@@ -86,7 +83,7 @@ public class ClientManager extends Thread {
 
                 //timer start
                 answer = Integer.parseInt(reader.readLine());
-                logS = String.format("answer client (%d) to question (%d) is: %d\n", client.getPort(), i + 1, answer);
+                logS = String.format("answer client (%s) to question (%d) is: %d\n", username, i + 1, answer);
 
                 Thread.sleep(200);
                 //update score
@@ -97,13 +94,14 @@ public class ClientManager extends Thread {
                 else
                     ClientManager.score.put(this.getUsername(), ClientManager.score.getOrDefault(this.getUsername(), 0) - 100);
 
+                Thread.sleep(2000); //wait for complete score board
 
-                class test extends Thread {
+                class scoreSenderT extends Thread {
                     public void run() {
                         sendScoreBoard();
                     }
                 }
-                test t = new test();
+                scoreSenderT t = new scoreSenderT();
                 t.start();
 
                 String finalLogS = logS;
@@ -149,6 +147,7 @@ public class ClientManager extends Thread {
     private void display(String msg) {
         String time = sdf.format(new Date()) + " " + msg;
         System.out.println(time);
+        soutLog(time);
     }
 
     public void inputMessages() {
@@ -165,7 +164,7 @@ public class ClientManager extends Thread {
             // different actions based on type message
             if (message.contains("logout")) {
                 this.online = false;
-                boolean confirmation = server.broadcast(username + ": " + "has left the chat");
+                boolean confirmation = server.broadcast(username + ": " + "has left the chat\n");
                 if (confirmation == false) {
                     String msg = "Sorry. No such user exists.";
                     this.writeMsg(msg);
@@ -204,7 +203,7 @@ public class ClientManager extends Thread {
         return true;
     }
 
-    synchronized private void soutLog(String logS) {
+    static synchronized public void soutLog(String logS) {
         Lobby.clientsLogTxtAr.appendText(logS);
     }
 }

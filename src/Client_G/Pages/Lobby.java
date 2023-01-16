@@ -39,7 +39,7 @@ public class Lobby {
     public static ProgressBar progressBar;
 
     public void start(Stage stage) throws Exception {
-        usrTitle = String.format("%d", new Random().nextInt(100));
+        usrTitle = String.format("%d", new Random().nextInt(10000));
         Label label1 = new Label("Quiz Room");
         label1.setTextFill(Color.web("#c22d0c"));
         label1.setStyle("-fx-font-family: 'Arial Narrow';\n" +
@@ -120,7 +120,7 @@ public class Lobby {
         stage.setWidth(stageWidth);
         stage.setHeight(stageHeight);
         stage.setResizable(true);
-        stage.setAlwaysOnTop(true);
+        stage.setAlwaysOnTop(false);
         stage.show();
 
         stage.setOnCloseRequest(we -> {
@@ -271,6 +271,7 @@ public class Lobby {
     }
 
     public static boolean isClicked() {
+        showBtns(false);
         return clicked;
     }
 
