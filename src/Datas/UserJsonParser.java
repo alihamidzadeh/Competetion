@@ -9,7 +9,6 @@ import org.json.simple.parser.ParseException;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 
 
@@ -20,10 +19,11 @@ public class UserJsonParser {
     public static void main(String[] args) throws IOException, ParseException {
 
 
-        Object obj = new JSONParser().parse(new FileReader("src/users.json"));
+        Object obj = new JSONParser().parse(new FileReader("src/Datas/users.json"));
         JSONArray array = (JSONArray) obj;
 
         for (int i = 0; i < array.size(); i++) {
+//            System.out.println("array.size: " + array.size());
             JSONObject job = (JSONObject) array.get(i);
             String type = job.get("type").toString();
             if (type.equals("host")) {

@@ -7,13 +7,16 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 
 public class Client {
     public static Socket socket;
-    private int port;
-    private static String UserName;
+    private int Sport;
+    private int Cport;
+    private static String CUserName;
+
     InputStreamReader toServerStream;
     OutputStreamWriter fromServerStream;
     BufferedReader reader;
@@ -24,21 +27,22 @@ public class Client {
     public static boolean chatPermit = false;
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
-    public Client(int port, String name) throws InterruptedException {
-        setPort(port);
-        setUserName(name);
+    public Client(int Cport, String Cname, int Sport) throws InterruptedException {
+        setCPort(Cport);
+        setCUserName(Cname);
+        setSPort(Sport);
 
         try {
-            socket = new Socket(hostAddress, 8082/*, InetAddress.getByName(hostAddress), 5003 /*Client_G.Client Port */);
+            socket = new Socket(hostAddress, getSPort(), InetAddress.getByName(hostAddress), getCPort() );
             Platform.runLater(() -> {
-                Lobby.label2.setText(this.getUserName());
+                Lobby.label2.setText(this.getCUserName());
             });
             fromServerStream = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
             toServerStream = new InputStreamReader(socket.getInputStream(), "UTF-8");
             reader = new BufferedReader(toServerStream);
             writer = new PrintWriter(fromServerStream, true);
             String quiz;
-            writer.println(this.getUserName());
+            writer.println(this.getCUserName());
             int numberOfQuestions = Integer.parseInt(reader.readLine());
             int qDuration = Integer.parseInt(reader.readLine());
             int clientNumber = Integer.parseInt(reader.readLine());
@@ -178,20 +182,28 @@ public class Client {
 
     }
 
-    public int getPort() {
-        return port;
+    public int getCPort() {
+        return Cport;
     }
 
-    public void setPort(int port) {
-        this.port = port;
+    public void setCPort(int port) {
+        this.Cport = port;
     }
 
-    public static String getUserName() {
-        return UserName;
+    public static String getCUserName() {
+        return CUserName;
     }
 
-    public void setUserName(String userName) {
-        UserName = userName;
+    public void setCUserName(String userName) {
+        CUserName = userName;
+    }
+
+    public int getSPort() {
+        return Sport;
+    }
+
+    public void setSPort(int port) {
+        this.Sport = port;
     }
 
 }

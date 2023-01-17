@@ -29,7 +29,7 @@ public class Server {
         try {
             if (socket != null && !socket.isClosed())
                 socket.close();
-            socket = new ServerSocket(8082);
+            socket = new ServerSocket(ServerMain.Sport);
             String logS = "Server Created!\n";
             Lobby.clientsLogTxtAr.setText(logS);
             int countClient = 0;

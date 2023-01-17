@@ -69,7 +69,7 @@ public class Chat {
         HBox hBox1 = new HBox(2);
 
         for (int i = 0; i < Lobby.recordsLobbyBackup.length; i++) {
-            if (Client.getUserName().equals(Lobby.recordsLobbyBackup[i].getUsername()))
+            if (Client.getCUserName().equals(Lobby.recordsLobbyBackup[i].getUsername()))
                 continue;
             String usrS = Lobby.recordsLobbyBackup[i].getUsername();
             Button usrBtn = new Button(usrS);

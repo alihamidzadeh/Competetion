@@ -2,6 +2,7 @@ package Client_G.Pages;
 
 import Client_G.Client;
 import Client_G.C_Graphic;
+import Client_G.ClientMain;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -134,7 +135,7 @@ public class Lobby {
             @Override
             public void run() {
                 try {
-                    Client socket = new Client(5230, usrTitle);
+                    Client socket = new Client(ClientMain.Cport, ClientMain.Cusrname, ClientMain.Sport);
                 } catch (Exception e) {
                     System.out.println("Can NOT Connect To Server!");
                     e.printStackTrace();
