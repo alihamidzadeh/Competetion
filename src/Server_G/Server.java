@@ -11,16 +11,17 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Server {
+
     public static ServerSocket socket;
     private int port;
     private String UserName;
-    public static final int qDuration = 3000; //10 second
+
+    public static final int qDuration = 3000; //45 second
     private final int clientLimit = 3; //start the quiz with n clients
-    private final int waitingTime = 10; //60 second
-    String logS = "";
+    private final int waitingTime = 60000; //60 second
 
+    private String logS = "";
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-
 
     public static ArrayList<ClientManager> threadList = new ArrayList<>();
     public static ArrayList<Socket> clientList = new ArrayList<>();
@@ -41,7 +42,6 @@ public class Server {
                 try {
                     client = socket.accept();
                 } catch (SocketTimeoutException ste) {
-                    //ste.printStackTrace();
                     System.out.println("game start");
                     break;
                 }
@@ -64,7 +64,6 @@ public class Server {
 //            while(true);
         } catch (Exception e) {
             e.printStackTrace();
-
         }
     }
 
@@ -82,23 +81,14 @@ public class Server {
 
     public synchronized boolean broadcast(String message) {
         String time = sdf.format(new Date());
-        // to check if message is private i.e. client to client message
-//       message = message.trim(); //TODO (Handle newline meessages)
-//        if (message.equals("\n")) {
-//            System.out.println("Invalid Message!\n");
-//            return false;
-//        }
 
         String[] w = message.split(" ", 3);
 
         boolean isPrivate = false;
-//        System.out.println("." + w[1] + ".\n");
-//        System.out.println("." + w[1].charAt(0) + ".\n");
 
         if (w[1].charAt(0) == '@')
             isPrivate = true;
 
-        // if private message, send message to mentioned username only
         if (isPrivate) {
             String tocheck = w[1].substring(1, w[1].length());
 
@@ -109,7 +99,6 @@ public class Server {
             ClientManager.soutLog(messageServerLog);
             String messageLf = time + " " + message + "\n";
             boolean found = false;
-            // we loop in reverse order to find the mentioned username
             for (int y = threadList.size(); --y >= 0; ) {
                 ClientManager ct1 = threadList.get(y);
                 String check = ct1.getUsername();
@@ -117,7 +106,6 @@ public class Server {
                     if (ct1.isOnline()) {
                         // try to write to the Client if it fails remove it from the list
                         if (!ct1.writeMsg(messageLf)) {
-//                        threadList.remove(y);
                             display("Disconnected Client " + ct1.getUsername() + " removed from list.");
                         }
                         // username found and delivered the message
@@ -139,14 +127,11 @@ public class Server {
             // display message
             display(messageLf);
 
-            // we loop in reverse order in case we would have to remove a Client
-            // because it has disconnected
             for (int i = threadList.size(); --i >= 0; ) {
                 ClientManager ct = threadList.get(i);
                 // try to write to the Client if it fails remove it from the list
                 if (ct.isOnline()) {
                     if (!ct.writeMsg(messageLf)) {
-//                    threadList.remove(i);
                         display("Disconnected Client " + ct.getUsername() + " removed from list.");
                     }
                 } else {
@@ -155,8 +140,6 @@ public class Server {
             }
         }
         return true;
-
-
     }
 
     public int getPort() {

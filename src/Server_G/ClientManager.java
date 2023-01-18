@@ -14,13 +14,13 @@ public class ClientManager extends Thread {
     Socket client;
     Server server;
 
-    InputStreamReader fromClientStream;
-    OutputStreamWriter toClientStream;
-    BufferedReader reader;
-    PrintWriter writer;
-    int answer = 0;
-    int port;
-    String username;
+    private InputStreamReader fromClientStream;
+    private OutputStreamWriter toClientStream;
+    private BufferedReader reader;
+    private PrintWriter writer;
+    private int answer = 0;
+    private int port;
+    private String username;
     public boolean online = false;
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
@@ -73,7 +73,7 @@ public class ClientManager extends Thread {
             writer.println(Server.threadList.size());
 
             for (int i = 0; i < Question.questions.size(); i++) {
-                Thread.sleep(200); //TODO WHY?, because the sky is high, OKay I reduced it.
+                Thread.sleep(200);
                 writer.println(Question.questions.get(i).getQuest());
 
                 writer.println(Question.questions.get(i).getChoices(1));
@@ -111,14 +111,11 @@ public class ClientManager extends Thread {
 
                 });
 
-//                Thread.sleep(5000); //for check scoreboard
-//                t.stop();
                 inputMessages();
                 while (!checkChatExit()) ;
                 writer.println("chat finished");
 
             }
-//            while (true) ;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -157,7 +154,7 @@ public class ClientManager extends Thread {
             try {
                 message = reader.readLine();
             } catch (IOException e) {
-                display(this.getUsername() + " Exception reading Streams: " + e); //TODO key lazem mishe?//readline ada da biare
+                display(this.getUsername() + " Exception reading Streams: " + e);
                 break;
             }
 
@@ -181,19 +178,9 @@ public class ClientManager extends Thread {
         }
     }
 
-
-//    class ChatThread extends Thread{
-//        public void run(){
-//
-//        }
-//    }
-
-    //TODO
-
     public boolean writeMsg(String msg) {
         // if Client is still connected send the message to it
         if (!client.isConnected()) {
-            // close();
             return false;
         }
         // write the message to the stream

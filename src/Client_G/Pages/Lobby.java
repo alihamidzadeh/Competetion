@@ -40,7 +40,7 @@ public class Lobby {
     public static ProgressBar progressBar;
 
     public void start(Stage stage) throws Exception {
-        usrTitle = String.format("%d", new Random().nextInt(10000));
+        usrTitle = String.format(ClientMain.Cusrname);
         Label label1 = new Label("Quiz Room");
         label1.setTextFill(Color.web("#c22d0c"));
         label1.setStyle("-fx-font-family: 'Arial Narrow';\n" +

@@ -17,13 +17,13 @@ public class Client {
     private int Cport;
     private static String CUserName;
 
-    InputStreamReader toServerStream;
-    OutputStreamWriter fromServerStream;
-    BufferedReader reader;
-    PrintWriter writer;
+    private InputStreamReader toServerStream;
+    private OutputStreamWriter fromServerStream;
+    private BufferedReader reader;
+    private PrintWriter writer;
     public static int answer;
-    String hostAddress = "127.0.0.1";
-    boolean keepChatting = false;
+    private String hostAddress = "127.0.0.1";
+    private boolean keepChatting = false;
     public static boolean chatPermit = false;
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
@@ -151,10 +151,6 @@ public class Client {
             this.sendMessage(msg);
 
         }
-
-        // close resource
-        // client completed its job. disconnect client.
-        //client.disconnect();
 
     }
 
