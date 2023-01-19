@@ -16,9 +16,9 @@ public class Server {
     private int port;
     private String UserName;
 
-    public static final int qDuration = 3000; //45 second
+    public static final int qDuration = 45000; //45 second
     private final int clientLimit = 3; //start the quiz with n clients
-    private final int waitingTime = 60000; //60 second
+    private final int waitingTime = 25000; //60 second
 
     private String logS = "";
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
