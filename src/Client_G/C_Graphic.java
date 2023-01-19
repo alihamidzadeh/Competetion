@@ -13,16 +13,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-public class Graphic extends Application {
+public class C_Graphic extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        stage.setTitle("POAL Competetion Program");
-        stage.setResizable(false);
-        stage.setWidth(800);
-        stage.setHeight(600);
-        stage.setX(600);
-        stage.setY(50);
+
         Label titleLB = new Label("User");
         titleLB.setStyle("-fx-font-family: 'Impact';\n" +
                 "-fx-font-size: 40px;\n" +
@@ -81,16 +76,20 @@ public class Graphic extends Application {
 
         VBox vbox = new VBox(20);
         vbox.setAlignment(Pos.CENTER);
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        vbox.setLayoutX((primaryScreenBounds.getMaxX() / 2) - (primaryScreenBounds.getMaxX() / 3));
-        vbox.setLayoutY(60);
+        int stageWidth = 400;
+        int stageHeight = 400;
+        vbox.setLayoutX((stageWidth / 2) - (stageWidth / 6));
+        vbox.setLayoutY(20);
         vbox.getChildren().addAll(titleLB, startBtn,settingBtn, exitBtn);
         root.getChildren().add(vbox);
-        Scene scene1 = new Scene(root, 500, 300);
+        Scene scene1 = new Scene(root);
         stage.setScene(scene1);
-        stage.setFullScreen(false);
-        stage.setFullScreenExitHint("");
-        stage.alwaysOnTopProperty();
+        stage.setTitle("Quiz Program");
+        stage.setResizable(true);
+        stage.setWidth(stageWidth);
+        stage.setHeight(stageHeight);
+        stage.setX(400);
+        stage.setY(50);
         stage.setAlwaysOnTop(true);
         stage.show();
 

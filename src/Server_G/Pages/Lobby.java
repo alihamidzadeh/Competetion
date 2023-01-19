@@ -1,10 +1,8 @@
 package Server_G.Pages;
 
-import Client_G.Client;
 import Server_G.*;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,9 +10,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
 import java.io.IOException;
 
 import static java.lang.System.exit;
@@ -24,7 +22,7 @@ public class Lobby {
     public static TextArea clientsLogTxtAr = new TextArea();
 
     public void start(Stage stage) throws Exception {
-        Label label1 = new Label("Lobby");
+        Label label1 = new Label("Logs Room");
         label1.setTextFill(Color.web("#c22d0c"));
         label1.setStyle("-fx-font-family: 'Arial Narrow';\n" +
                 "-fx-font-size: 40px;\n" +
@@ -56,19 +54,22 @@ public class Lobby {
 
 //        root.setStyle("-fx-background-image: url('https://i.pinimg.com/originals/cf/4e/7e/cf4e7ef82f683fcc564d78e786511559.gif'); -fx-background-size: 100% 100%");
 
-        VBox vbox = new VBox(20);
+        VBox vbox = new VBox(12);
         vbox.setAlignment(Pos.CENTER);
-//        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        vbox.setLayoutX(100);
-        vbox.setLayoutY(60);
         vbox.getChildren().addAll(label1, label2, clientsLogTxtAr, backBtn);
+        int stageWidth = 800;
+        int stageHeight = 550;
+        vbox.setLayoutX((stageWidth / 2) - (stageWidth / 2.7));
+        vbox.setLayoutY(20);
         root.getChildren().add(vbox);
-        Scene scene1 = new Scene(root, 500, 600);
+        Scene scene1 = new Scene(root, stageWidth, stageHeight);
         stage.setScene(scene1);
-        stage.setFullScreen(false);
-        stage.setFullScreenExitHint("");
-        stage.alwaysOnTopProperty();
-        stage.setAlwaysOnTop(true);
+        stage.setAlwaysOnTop(false);
+        stage.setTitle("Server Logs");
+        stage.setWidth(stageWidth);
+        stage.setHeight(stageHeight);
+        stage.setX(200);
+        stage.setY(300);
         stage.show();
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
@@ -91,7 +92,7 @@ public class Lobby {
         serverThread t = new serverThread();
         t.start();
         backBtn.setOnAction(actionEvent -> {
-            Graphic graphics = new Graphic();
+            S_Graphic graphics = new S_Graphic();
             try {
                 t.stop();
                 if (Server.socket != null) {

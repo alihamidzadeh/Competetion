@@ -8,6 +8,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -19,16 +20,11 @@ import java.io.IOException;
 
 import static java.lang.System.exit;
 
-public class Graphic extends Application {
+public class S_Graphic extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        stage.setTitle("POAL Competetion Program");
-        stage.setResizable(false);
-        stage.setWidth(800);
-        stage.setHeight(600);
-        stage.setX(600);
-        stage.setY(50);
+
         Label titleLB = new Label("Server");
         titleLB.setStyle("-fx-font-family: 'Impact';\n" +
                 "-fx-font-size: 40px;\n" +
@@ -86,17 +82,21 @@ public class Graphic extends Application {
 
 
         VBox vbox = new VBox(20);
-        vbox.setAlignment(Pos.CENTER);
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        vbox.setLayoutX((primaryScreenBounds.getMaxX() / 2) - (primaryScreenBounds.getMaxX() / 3));
-        vbox.setLayoutY(60);
+        int stageWidth = 400;
+        int stageHeight = 400;
+        vbox.setLayoutX((stageWidth / 2) - (stageWidth / 6));
+        vbox.setLayoutY(20);
         vbox.getChildren().addAll(titleLB, startBtn, settingBtn, exitBtn);
         root.getChildren().add(vbox);
-        Scene scene1 = new Scene(root, 500, 300);
+        vbox.setAlignment(Pos.CENTER);
+        Scene scene1 = new Scene(root, stageWidth, stageHeight);
         stage.setScene(scene1);
-        stage.setFullScreen(false);
-        stage.setFullScreenExitHint("");
-        stage.alwaysOnTopProperty();
+        stage.setWidth(stageWidth);
+        stage.setHeight(stageHeight);
+        stage.setX(500);
+        stage.setY(200);
+        stage.setScene(scene1);
+        stage.setTitle("Server");
         stage.setAlwaysOnTop(true);
         stage.show();
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -111,8 +111,12 @@ public class Graphic extends Application {
         //set Action for botton
         startBtn.setOnAction(actionEvent -> {
             Lobby lobby = new Lobby();
+            Stage stage1 = new Stage();
+            stage1.setWidth(800);
+            stage1.setHeight(600);
             try {
-                lobby.start(stage);
+                lobby.start(stage1);
+                stage.close();
                 Lobby.clientsLogTxtAr.clear();
             } catch (Exception ex) {
                 ex.printStackTrace();

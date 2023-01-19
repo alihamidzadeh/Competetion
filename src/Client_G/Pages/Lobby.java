@@ -1,29 +1,25 @@
 package Client_G.Pages;
 
 import Client_G.Client;
-import Client_G.Graphic;
-import Server_G.Server;
+import Client_G.C_Graphic;
+import Client_G.ClientMain;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
+import java.util.Random;
 
 import static java.lang.System.exit;
 
@@ -36,11 +32,16 @@ public class Lobby {
     private static Button btn3;
     private static Button btn4;
     private static boolean clicked;
-    private static Text clientAns;
-
+    public static Text clientAns;
+    public static Text chatAlarm;
+    public static ScoreBoard.Record[] recordsLobbyBackup;
+    public static Button chatBtn;
+    public static String usrTitle;
+    public static ProgressBar progressBar;
 
     public void start(Stage stage) throws Exception {
-        Label label1 = new Label("Lobby");
+        usrTitle = ClientMain.Cusrname;
+        Label label1 = new Label("Quiz Room");
         label1.setTextFill(Color.web("#c22d0c"));
         label1.setStyle("-fx-font-family: 'Arial Narrow';\n" +
                 "-fx-font-size: 40px;\n" +
@@ -56,13 +57,15 @@ public class Lobby {
         label2 = new Label("Can NOT Connect To Server ...");
         label2.setTextFill(Color.web("#595556"));
         label2.setStyle("-fx-font-size:20px");
+
+        progressBar = new ProgressBar();
         LogTxtAr.setText("Waiting for others...\n");
         LogTxtAr.setStyle("-fx-font-size:17px; -fx-text-fill: #c746ff; -fx-font-weight: bold;");
         LogTxtAr.setDisable(false);
         LogTxtAr.setEditable(false);
 //        LogTxtAr.setFont(Font.loadFont("Resources/Font/B-NAZANIN.TTF", 120));
-        LogTxtAr.setMaxSize(700, 150);
-        LogTxtAr.setMinSize(500, 100);
+        LogTxtAr.setMaxSize(620, 140);
+        LogTxtAr.setMinSize(400, 100);
 
         btn1 = new Button("1");
         btn2 = new Button("2");
@@ -79,49 +82,62 @@ public class Lobby {
         hBox1.setAlignment(Pos.CENTER);
         hBox2.setAlignment(Pos.CENTER);
 
+
         hBox1.getChildren().addAll(btn1, btn2);
         hBox2.getChildren().addAll(btn3, btn4);
 
         clientAns = new Text();
         clientAns.setVisible(false);
         clientAns.setStyle("-fx-font-size:18px; -fx-font-weight: bold;");
+        chatAlarm = new Text("Need to Logout from chatroom for continue quiz!");
+        chatAlarm.setStyle("-fx-background-color: white; -fx-font-size:18px; -fx-font-weight: bold;");
+//        chatAlarm.setVisible(true);
 
+        Button scoreBtn = new Button("Score");
         Button backBtn = new Button("back");
+        Button clearAns = new Button("Clear");
+        chatBtn = new Button("Chat");
+        VBox vBox = new VBox(25);
+        vBox.setAlignment(Pos.CENTER);
+        vBox.getChildren().addAll(clearAns, backBtn);
+        HBox hBox3 = new HBox(10);
+        hBox3.setAlignment(Pos.CENTER);
+        hBox3.getChildren().addAll(scoreBtn, vBox, chatBtn);
+
         Pane root = new Pane();
         root.setStyle("-fx-background-color: linear-gradient(#f6fa00, #f6fa00); -fx-background-size: 100% 100%");
 
-//        root.setStyle("-fx-background-image: url('https://i.pinimg.com/originals/cf/4e/7e/cf4e7ef82f683fcc564d78e786511559.gif'); -fx-background-size: 100% 100%");
 
-        VBox vbox = new VBox(20);
+        VBox vbox = new VBox(10);
+        int stageWidth = 720;
+        int stageHeight = 600;
         vbox.setAlignment(Pos.CENTER);
-//        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        vbox.setLayoutX(45);
-        vbox.setLayoutY(60);
-        vbox.getChildren().addAll(label1, label2, LogTxtAr, hBox1, hBox2, clientAns, backBtn);
+        vbox.setLayoutX((stageWidth / 2) - (stageWidth / 2.3));
+        vbox.setLayoutY(10);
+        vbox.getChildren().addAll(label1, label2, progressBar, LogTxtAr, hBox1, hBox2, clientAns, chatAlarm, hBox3);
         root.getChildren().add(vbox);
-        Scene scene1 = new Scene(root, 700, 300);
+        Scene scene1 = new Scene(root, stageWidth, stageHeight);
         stage.setScene(scene1);
-        stage.setFullScreen(false);
-        stage.setFullScreenExitHint("");
-        stage.alwaysOnTopProperty();
-        stage.setAlwaysOnTop(true);
+        stage.setWidth(stageWidth);
+        stage.setHeight(stageHeight);
+        stage.setResizable(true);
+        stage.setAlwaysOnTop(false);
         stage.show();
 
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent we) {
-                System.out.println("Lobby window is closing");
-                stage.close();
-                exit(0);
-            }
+        stage.setOnCloseRequest(we -> {
+            System.out.println("Lobby window is closing");
+            stage.close();
+            exit(0);
         });
 
+        stage.setTitle(usrTitle);
         class serverThread extends Thread {
             @Override
             public void run() {
                 try {
-                    Client socket = new Client(5230, "client1");
+                    Client socket = new Client(ClientMain.Cport, ClientMain.Cusrname, ClientMain.Sport);
                 } catch (Exception e) {
-                    System.out.println("Can NOT Connected!");
+                    System.out.println("Can NOT Connect To Server!");
                     e.printStackTrace();
                 }
 
@@ -131,55 +147,116 @@ public class Lobby {
         t.start();
 
         btn1.setOnAction(actionEvent -> {
-//            System.out.println("btn1 was clicked");
             clientAns.setText("Your answer is number: 1");
             clientAns.setVisible(true);
-
             setChoice(1);
         });
 
         btn2.setOnAction(actionEvent -> {
-//            System.out.println("btn2 was clicked");
             clientAns.setText("Your answer is number: 2");
             clientAns.setVisible(true);
-
-
             setChoice(2);
-
         });
 
         btn3.setOnAction(actionEvent -> {
-//            System.out.println("btn3 was clicked");
             clientAns.setText("Your answer is number: 3");
             clientAns.setVisible(true);
-
             setChoice(3);
-
         });
 
         btn4.setOnAction(actionEvent -> {
-//            System.out.println("btn4 was clicked");
             clientAns.setText("Your answer is number: 4");
             clientAns.setVisible(true);
             setChoice(4);
+        });
+        clearAns.setOnAction(actionEvent -> {
+            clientAns.setText("Your answer was clear");
+            clientAns.setVisible(true);
+            setChoice(0);
+        });
 
+
+        scoreBtn.setOnAction(actionEvent -> {
+            if (recordsLobbyBackup != null) {
+                ScoreBoard scoreBoard = new ScoreBoard(recordsLobbyBackup);
+                Stage newstage = new Stage();
+                scoreBoard.start(newstage);
+            } else {
+                Pane errP = new Pane();
+                VBox vBoxx = new VBox(10);
+                Label label = new Label("  Score Board is Empty!");
+                Button buttonn = new Button("Back");
+                buttonn.setStyle("-fx-background-color: #ff0000;");
+
+                vBoxx.getChildren().addAll(label, buttonn);
+                vBoxx.setAlignment(Pos.CENTER);
+                errP.setStyle("-fx-background-color: #5ce54a; -fx-background-size: 100% 100%");
+                errP.getChildren().add(vBoxx);
+                Scene errScene = new Scene(errP, 130, 70);
+
+                Stage stage1 = new Stage();
+                stage1.setAlwaysOnTop(true);
+                stage1.setScene(errScene);
+                stage1.show();
+                buttonn.setOnAction(actionEvent1 -> {
+                    stage1.close();
+                });
+            }
         });
 
         backBtn.setOnAction(actionEvent -> {
-            Client_G.Graphic graphic = new Graphic();
+            C_Graphic CGraphic = new C_Graphic();
             try {
                 t.stop();
                 if (Client.socket != null) {
                     Client.socket.close();
                 }
 
-                graphic.start(stage);
+                CGraphic.start(stage);
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
         });
+
+        chatBtn.setOnAction(actionEvent -> {
+            if (Client.chatPermit) {
+                Chat chat = new Chat();
+                Stage stage1 = new Stage();
+                try {
+                    chat.start(stage1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Pane errP = new Pane();
+                VBox vBoxx = new VBox(10);
+                Label label = new Label("  Can't CHAT now!");
+                Button buttonn = new Button("Back");
+                buttonn.setStyle("-fx-background-color: #ff0000;");
+
+                vBoxx.getChildren().addAll(label, buttonn);
+                vBoxx.setAlignment(Pos.CENTER);
+                errP.setStyle("-fx-background-color: #5ce54a; -fx-background-size: 100% 100%");
+                errP.getChildren().add(vBoxx);
+
+                Stage stage1 = new Stage();
+                stage1.setAlwaysOnTop(true);
+                stage1.setScene(new Scene(errP, 130, 70));
+                stage1.show();
+                buttonn.setOnAction(actionEvent1 -> {
+                    stage1.close();
+                });
+            }
+        });
     }
 
+
+    public static void setQuiz(String quize) {
+        if (progressBar.isVisible()) {
+            progressBar.setVisible(false);
+        }
+        LogTxtAr.setText(quize);
+    }
 
     public void setChoice(int choice) {
         setClicked(true);
@@ -195,6 +272,7 @@ public class Lobby {
     }
 
     public static boolean isClicked() {
+        showBtns(false);
         return clicked;
     }
 
@@ -203,7 +281,6 @@ public class Lobby {
     }
 
     public static int getChoice() {
-        clientAns.setVisible(false);
         return choice;
     }
 }
