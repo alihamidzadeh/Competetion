@@ -18,7 +18,7 @@ public class Server {
 
     public static final int qDuration = 45000; //45 second
     private final int clientLimit = 3; //start the quiz with n clients
-    private final int waitingTime = 25000; //60 second
+    private final int waitingTime = 25000; //25 second wait for join another clients
 
     private String logS = "";
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
